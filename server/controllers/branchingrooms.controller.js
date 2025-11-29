@@ -37,7 +37,7 @@ const createMessageInABranchingRoom = async function(req, res, next){
         const branchingRoomObjectId = branchingRoom._id;
 
         const newMessage = await messagesModel.create({BranchingRoom: branchingRoomObjectId, ...req.body});
-        res.status(201).json({message: "Success"});
+        res.status(201).json({message: "Success", Object: newMessage});
 
     }catch (err){
         next(err);
@@ -128,7 +128,37 @@ const getAllBranchingRooms = async function(req, res, next){
 const getBranchingRoom =  async function(req, res, next){
     try{
         const SingleBranchingRooms = await BranchingRoom.findOne({branchingRoomId: req.params.branchingRoomId}).populate("parentRoomId").exec();
-        res.status(200).json(SingleBranchingRooms);
+
+        const HATEOAS = {
+            ...SingleBranchingRooms.toObject(),
+            "_links": {
+                "self":{
+                    href: `/branchingRooms/${SingleBranchingRooms.branchingRoomId}`,
+                    method: "GET"
+                },
+                 "createAMessage":{
+                    href :`/branchingRooms/${SingleBranchingRooms.branchingRoomId}/messages`,
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+
+                },
+                "GetAllMessages":{
+                    href : `/branchingRooms/${SingleBranchingRooms.branchingRoomId}/messages`,
+                    method: "GET"
+                },
+                "updateMessage":{
+                    href:  `/branchingRooms/${SingleBranchingRooms.branchingRoomId}/messages/`,
+                    method: "PATCH"
+                },
+                "deleteMessage":{
+                    href: `/branchingRooms/${SingleBranchingRooms.branchingRoomId}/messages/`,
+                    method: "DELETE"
+                }
+
+            }
+        }
+        res.status(200).json(HATEOAS);
+
     }catch(err){
         next(err);
     } 
@@ -151,12 +181,38 @@ const getAllMessagesInBranchingRoom  = async function(req, res, next) {
 
 // GET: Read A specific message in a specific branching room 
 const getAMessageInABranchingRoom =  async function(req, res, next){
+
+
     try{
-        const branchingRoom = await BranchingRoom.findOne({branchingRoomId: req.params.branchingRoomId});
+        const {branchingRoomId, messageId} = req.params;
+        const branchingRoom = await BranchingRoom.findOne({branchingRoomId: branchingRoomId});
         const allmessagesModelInBranchingRoom = await messagesModel.find({BranchingRoom: branchingRoom._id});
-        const MessageInBranchingRoom = await messagesModel.findOne({messageId: req.params.messageId}).populate("ResponseIds").populate("BranchingRoom").populate("Sender");
-        if(!allmessagesModelInBranchingRoom){ res.status(404).json({message:"Not Found"});}
-        res.status(200).json(MessageInBranchingRoom);
+        const MessageInBranchingRoom = await messagesModel.findOne({messageId: messageId}).populate("ResponseIds").populate("BranchingRoom").populate("Sender");
+        if(!MessageInBranchingRoom){ res.status(404).json({message:"Not Found"});}
+
+        const HATEOASMessaeg = {
+            ...MessageInBranchingRoom.toObject(),
+            "_links":{
+                "self":{
+                    href:`/branchingRooms/${branchingRoomId}/messages/${messageId}`,
+                    method: "GET"
+                },
+                "createResponse":{
+                    href:`/branchingRooms/${branchingRoomId}/messages/${messageId}`,
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                },
+                "updateMessage":{
+                    href:`/branchingRooms/${branchingRoomId}/messages/${messageId}`,
+                    method: "PATCH"
+                },
+                "deleteMessage":{
+                    href:`/branchingRooms/${branchingRoomId}/messages/${messageId}`,
+                    method: "DELETE"
+                },
+            }
+        }
+        res.status(200).json(HATEOASMessaeg);
 
     }catch (err){
         next(err);
