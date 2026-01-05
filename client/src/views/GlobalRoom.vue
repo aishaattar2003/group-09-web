@@ -83,7 +83,7 @@
                 </small>
 
                 <p class="message-text-style">
-                    {{ msg.Body }}
+                    {{ msg.isTranslated ? msg.translatedBody : msg.Body }}
                 </p>
 
                 <small class="message-font-style">
@@ -133,8 +133,9 @@
                       class="optionMenuButton"
                       @click="deleteMessage(msg)">Delete</button>
                     <!-- only sender can delete -->
-                    <button class="optionMenuButton" @click="translateMessage(msg)">Translate</button>
-
+                    <button v-if="String(msg.senderId) !== String(senderObjectId)" 
+                     class="optionMenuButton"
+                      @click="translateMessage(msg)">Translate</button>
                 </div>
 
                     <!-- Reaction Menu -->
@@ -430,6 +431,9 @@ export default {
         senderId: m.Sender._id,
         messageId: m.messageId,
         anonymousName: m.anonymousName,
+        originalBody: m.Body,   
+        translatedBody: null,  
+        isTranslated: false, 
         Body: m.Body,
         timestamp: m.SendTimestamp,
         reactions: m.Reactions || []
@@ -534,6 +538,34 @@ export default {
           this.message = '';              
           this.originalEditMessage = ''; 
         },
+
+        async translateMessage(msg) {
+          try {
+            if (msg.isTranslated) {
+              msg.isTranslated = false;
+              return;
+            }
+          
+            // translate to user's UI language
+            const user = JSON.parse(localStorage.getItem("user"));
+            const targetLang = user?.language || "en";
+          
+            const res = await Api.get(
+              `/branchingrooms/${this.branchingRoomId}/messages/${msg.messageId}/translate`,
+              {
+                params: { target: targetLang }
+              }
+            );
+            
+            msg.translatedBody = res.data.translated;
+            msg.isTranslated = true;
+            
+            this.closeOptionMenu();
+          } catch (err) {
+            console.error("Translation failed:", err);
+          }
+        },
+
 
 
     }

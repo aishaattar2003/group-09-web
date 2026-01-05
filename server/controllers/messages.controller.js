@@ -38,7 +38,6 @@ const createMessage = async function(req, res, next){
 };
 
 // POST createResponseMessage
-
 const createResponseMessage = async function(req, res, next){
   try {
 //Check if the Message Already exists
@@ -61,10 +60,6 @@ const createResponseMessage = async function(req, res, next){
   }
 
 };
-
-
-
-
 
 
 
@@ -134,6 +129,36 @@ const getMessageById = async function(req, res, next){
 };
 
 
+// GET Translate message
+const translateMessage = async (req, res, next) => {
+  try {
+    const { messageId } = req.params;
+    const targetLang = req.query.target;
+
+    if (!targetLang) {
+      return res.status(400).json({
+        error: "target language required ?target=xx"
+      });
+    }
+
+    const msg = await Message.findOne({ messageId });
+    if (!msg) {
+      return res.status(404).json({ error: "Message not found" });
+    }
+
+    const result = await translateText({
+      messageId,
+      text: msg.Body,
+      targetLang
+    });
+
+    res.status(200).json(result);
+  } catch (err) {
+    next(err);
+  }
+};
+
+
 // PATCH patchMessage
 const updateMessageById = async function(req, res, next)  {
   try {
@@ -187,4 +212,4 @@ const deleteMessageById = async function(req, res, next)  {
 
 
 
-module.exports = {createResponseMessage,createMessage, getAllMessages, getMessageById, updateMessageById, deleteAllMessages, deleteMessageById}
+module.exports = {createResponseMessage,createMessage, getAllMessages, getMessageById, translateMessage, updateMessageById, deleteAllMessages, deleteMessageById}

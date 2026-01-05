@@ -19,7 +19,7 @@
 
         <!-- LOCAL ROOM -->
         <router-link 
-        v-if="user && user.language === 'swe'" 
+        v-if="user && user.language === 'sv'" 
         to="/localroom" class="room-card">
           <div class="room-text">LOCAL ROOM</div>
           <img
