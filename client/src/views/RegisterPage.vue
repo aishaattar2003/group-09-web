@@ -9,27 +9,24 @@
 
             <b-form @submit.prevent="handleRegister">
 
-              <!-- Username -->
               <b-form-group label="Username">
                 <b-form-input
                   v-model="userId"
                   type="text"
                   placeholder="Enter Username"
-                  required
+                  required autocomplete="username"
                 />
               </b-form-group>
 
-              <!-- Personal Number -->
               <b-form-group label="Personal Number">
                 <b-form-input
                   v-model="personalNumber"
                   type="text"
                   placeholder="Enter Personal Number"
-                  required
+                  required auto
                 />
               </b-form-group>
 
-              <!-- Language (SAME PATTERN AS CREATE ROOMS) -->
               <b-form-group label="Language">
                 <b-form-select v-model="language" required>
                   <b-form-select-option disabled value="">
@@ -46,7 +43,6 @@
                 </b-form-select>
               </b-form-group>
 
-              <!-- Password -->
               <b-form-group label="Password">
                 <b-form-input
                   v-model="password"
@@ -56,17 +52,14 @@
                 />
               </b-form-group>
 
-              <!-- Submit -->
               <b-button type="submit" variant="light" class="Register-btn">
                 Register
               </b-button>
 
-              <!-- Error -->
               <b-alert v-if="error" show class="mt-3">
                 {{ error }}
               </b-alert>
 
-              <!-- Login link -->
               <p class="login-text mt-3">
                 Already have an account?
                 <router-link to="/login">Log in</router-link>
