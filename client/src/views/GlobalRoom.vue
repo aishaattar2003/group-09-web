@@ -423,9 +423,6 @@ export default {
 
     },
 
-
-    
-
     closeOptionMenu() {
       this.activeMessageOption = null;
       this.showReactionsForMessage = null;
@@ -519,6 +516,9 @@ export default {
         messageId: m.messageId,
         anonymousName: m.anonymousName,
         Body: m.Body,
+        originalBody: m.Body,   
+        translatedBody: null,  
+        isTranslated: false, 
         timestamp: m.SendTimestamp,
         reactions: m.Reactions || [],
         _links:m._links|| null,
@@ -620,6 +620,33 @@ export default {
       this.message = '';              
       this.originalEditMessage = ''; 
     },
+
+    async translateMessage(msg) {
+          try {
+            if (msg.isTranslated) {
+              msg.isTranslated = false;
+              return;
+            }
+          
+            // translate to user's UI language
+            const user = JSON.parse(localStorage.getItem("user"));
+            const targetLang = user?.language || "en";
+          
+            const res = await Api.get(
+              `/branchingrooms/${this.branchingRoomId}/messages/${msg.messageId}/translate`,
+              {
+                params: { target: targetLang }
+              }
+            );
+            
+            msg.translatedBody = res.data.translated;
+            msg.isTranslated = true;
+            
+            this.closeOptionMenu();
+          } catch (err) {
+            console.error("Translation failed:", err);
+          }
+        },
   }
 }
 </script>
