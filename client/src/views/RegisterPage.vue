@@ -9,7 +9,6 @@
 
             <b-form @submit.prevent="handleRegister">
 
-              <!-- Username -->
               <b-form-group label="Username">
                 <b-form-input
                   v-model="userId"
@@ -19,7 +18,6 @@
                 />
               </b-form-group>
 
-              <!-- Personal Number -->
               <b-form-group label="Personal Number">
                 <b-form-input
                   v-model="personalNumber"
@@ -29,7 +27,6 @@
                 />
               </b-form-group>
 
-              <!-- Language (SAME PATTERN AS CREATE ROOMS) -->
               <b-form-group label="Language">
                 <b-form-select v-model="language" required>
                   <b-form-select-option disabled value="">
