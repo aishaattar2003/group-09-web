@@ -3,9 +3,9 @@
     <div class="card">
       <h2>Settings</h2>
 
-      <button @click="main">Main Page</button>
-      <button @click="logout">Log out</button>
-      <button @click="cancel">Cancel</button>
+      <b-button @click="main">Main Page</b-button>
+      <b-button @click="logout">Log out</b-button>
+      <b-button @click="cancel">Cancel</b-button>
     </div>
   </div>
 </template>

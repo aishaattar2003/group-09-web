@@ -1,21 +1,25 @@
 <template>
   <div class="admin-page">
+    <div class="container">
+    <div class="row min-vh-100 justify-content-center align-items-center">
+      <div class="col-12 col-md-6">
     <div class="admin">
 
       <h1 class="admin-title">Admin Page</h1>
 
       <!-- Buttons -->
       <div class="controls">
-        <button class="admin-button" @click="$router.push('/admin/createrooms')">
+        <b-button class="admin-button" @click="$router.push('/admin/createrooms')">
         Create Topic Rooms
-        </button>
-        <button class="admin-button" @click="$router.push('/admin/users')">
-        Display Users
-        </button>
+        </b-button>
 
-        <button class="admin-button" @click="deleteAllMessages">
+        <b-button class="admin-button" @click="$router.push('/admin/users')">
+        Display Users
+        </b-button>
+        
+        <b-button class="admin-button" @click="deleteAllMessages">
             Delete All Messages
-            </button>
+            </b-button>
       </div>
 
       <h2 class="section-title">Chat Control</h2>
@@ -46,9 +50,12 @@
           />
 
           <div class="status">{{ globalChatStatus }}</div>
+         </div>
+            </div>
+          </div>
+
         </div>
       </div>
-
     </div>
 
     <!-- Popup -->

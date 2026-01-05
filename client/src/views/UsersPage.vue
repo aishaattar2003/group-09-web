@@ -11,12 +11,15 @@
       <h1 class="title">Registered Users</h1>
 
   <div v-if="users.length" class="content">
-  <ul class="usersList">
-    <li v-for="user in users" :key="user._id">
-      <span>{{ user.userId }}</span>
-      <span>{{ user.language }}</span>
-    </li>
-  </ul>
+    <b-list-group flush>
+      <b-list-group-item
+        v-for="user in users"
+        :key="user._id"
+        class="d-flex justify-content-between align-items-center">
+        <span>{{ user.userId }}</span>
+        <span class="lang-text">{{ user.language }}</span>
+      </b-list-group-item>
+  </b-list-group>
 </div>
 
     </div>

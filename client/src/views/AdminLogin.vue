@@ -1,35 +1,45 @@
 <template>
     <div class="login-wrapper">
+      <div class="container">
+      <div class="row min-vh-100 justify-content-center align-items-center">
+      <div class="col-12 col-md-6">
       <div class="login-card">
 
         <!-- Header -->
         <h2 class="title">Admin Login</h2>  
-        <form @submit.prevent="handleLogin" class="form">
+        <b-form @submit.prevent="handleLogin">
+        
+        <b-form-group
+          label="Admin ID"
+          label-align="left"
+          >
+          <b-form-input id="user-id" v-model="loginInput" type="text" required autocomplete="username"/>
+        </b-form-group>
 
-            <!-- Dynamic Input -->
-            <div class="input-group">
-            <label>User ID</label>
-            <input v-model="loginInput" type="text" required/>
-            </div>
-  
-          <div class="input-group">
-            <label>Password</label>
-            <input v-model="password" type="password" required />
-          </div>
-  
-          <button type="submit" class="login-btn">Login</button>
-        </form>
+        <b-form-group
+          label="Password"
+          label-for="password"
+        >
+          <b-form-input id="password" v-model="password" type="password" required autocomplete="current-password"/>     
+          </b-form-group>
 
-        <!-- Error handling -->
-        <p v-if="error" class="error">{{ error }}</p>
+        <b-button type="submit" variant="light" class="login-btn" >Login</b-button>
+
+
+        <b-alert v-if="error" show class="mt-3"> {{ error }}</b-alert>
+
+      </b-form>
   
-      </div>
-    </div>
-  </template>
+      </div> 
+        </div>  
+      </div>    
+    </div>      
+  </div>       
+</template>
   
   <script>
   import { Api } from "../Api";
-    import { getUserObjectId, setUserObjectId } from "@/cache/user.cache";
+    import {setUserObjectId } from "@/cache/user.cache";
   
   export default {
     name: "AdminLogin",

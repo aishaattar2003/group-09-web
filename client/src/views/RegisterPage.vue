@@ -1,53 +1,79 @@
 <template>
-  <div class="register">
-    <div class="register-card">
+  <div class="login-wrapper">
+    <div class="container">
+      <div class="row min-vh-100 justify-content-center align-items-center">
+        <div class="col-12 col-md-6">
+          <div class="login-card">
 
-      <h1 class="title">Sign up</h1>
+            <h2 class="title">Sign up</h2>
 
-      <form @submit.prevent="handleRegister">
+            <b-form @submit.prevent="handleRegister">
 
-        <div class="input-group">
-          <label>Username:</label>
-          <input v-model="userId" placeholder="Enter Username" />
-        </div>
+              <b-form-group label="Username">
+                <b-form-input
+                  v-model="userId"
+                  type="text"
+                  placeholder="Enter Username"
+                  required autocomplete="username"
+                />
+              </b-form-group>
 
-        <div class="input-group">
-          <label>Personal Number:</label>
-          <input v-model="personalNumber" placeholder="Enter Personal Number" />
-        </div>
+              <b-form-group label="Personal Number">
+                <b-form-input
+                  v-model="personalNumber"
+                  type="text"
+                  placeholder="Enter Personal Number"
+                  required auto
+                />
+              </b-form-group>
 
-        <div class="input-group">
-        <label>Language:</label>
-        <div class="select-wrapper">
-          <select v-model="language" required>
-            <option disabled value="">Select language</option>
-            <option
-              v-for="lang in languages"
-              :key="lang.code"
-              :value="lang.code">
-              {{ lang.label }}
-            </option>
-          </select>
+              <b-form-group label="Language">
+                <b-form-select v-model="language" required>
+                  <b-form-select-option disabled value="">
+                    Select language
+                  </b-form-select-option>
+
+                  <b-form-select-option
+                    v-for="lang in languages"
+                    :key="lang.code"
+                    :value="lang.code"
+                  >
+                    {{ lang.label }}
+                  </b-form-select-option>
+                </b-form-select>
+              </b-form-group>
+
+              <b-form-group label="Password">
+                <b-form-input
+                  v-model="password"
+                  type="password"
+                  placeholder="Enter Password"
+                  required
+                />
+              </b-form-group>
+
+              <b-button type="submit" variant="light" class="Register-btn">
+                Register
+              </b-button>
+
+              <b-alert v-if="error" show class="mt-3">
+                {{ error }}
+              </b-alert>
+
+              <p class="login-text mt-3">
+                Already have an account?
+                <router-link to="/login">Log in</router-link>
+              </p>
+
+            </b-form>
+
+          </div>
         </div>
       </div>
-
-
-        <div class="input-group">
-          <label>Password:</label>
-          <input v-model="password" type="password" placeholder="Enter Password" />
-        </div>
-
-        <button type="submit" class="btn-submit">Register</button>
-
-        <p class="login-text">
-          Already have an account?
-          <router-link to="/login">Log in</router-link>
-        </p>
-
-      </form>
     </div>
   </div>
 </template>
+
 
 <script>
 import { Api } from "../Api";

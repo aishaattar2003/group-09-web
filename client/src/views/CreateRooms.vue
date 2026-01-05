@@ -1,60 +1,66 @@
 <template>
   <div class="page-container">
+    <div class="container">
+      <div class="row justify-content-md-center">
+      <div class="col-12 col-md-6">
     <div class="card">
-
         <div class="topBar">
-        <button class="backButton" @click="$router.push('/admin')">
+        <b-button class="backButton" @click="$router.push('/admin')">
           ← Back
-        </button>
+        </b-button>
       </div>
 
       <h1 class="title">Create Topic Room</h1>
 
-      <!-- Room Type -->
-      <div class="input-group">
-        <label>Room Type</label>
-        <select v-model="branchingRoomType" class="field">
-          <option disabled value="">Select room type</option>
-          <option
-            v-for="type in roomTypes"
-            :key="type"
-            :value="type">
-            {{ type }}
-          </option>
-        </select>
-      </div>
+        <b-form @submit.prevent="handleCreateRoom">
 
-      <!-- Room Topic -->
-      <div class="input-group">
-        <label>Room Topic</label>
-        <select v-model="roomTopic" class="field">
-          <option disabled value="">Select topic</option>
-          <option
-            v-for="topic in roomTopics"
-            :key="topic"
-            :value="topic">
-            {{ topic }}
-          </option>
-        </select>
-      </div>
+        <!-- Room Type -->
+        <b-form-group label="Room Type">
+          <b-form-select v-model="branchingRoomType" required>            
+            <b-form-select-option disabled value="">Select room type</b-form-select-option>
+
+            <b-form-select-option
+              v-for="type in roomTypes"
+              :key="type"
+              :value="type">
+              {{ type }}
+            </b-form-select-option>
+          </b-form-select>
+        </b-form-group>
+
+        <!-- Room Topic -->
+        <b-form-group label="Room Topic">
+          <b-form-select v-model="roomTopic" required>
+            <b-form-select-option disabled value="">Select topic</b-form-select-option>
+
+            <b-form-select-option
+              v-for="topic in roomTopics"
+              :key="topic"
+              :value="topic">
+              {{ topic }}
+            </b-form-select-option>
+          </b-form-select>
+        </b-form-group>
 
       <!-- Room ID -->
-      <div class="input-group">
-        <label>Room ID</label>
-        <input
-          v-model="branchingRoomId"
-          class="field"
-          placeholder="Enter room ID"
-        />
-      </div>
+        <b-form-group label="Room ID">
+          <b-form-input
+            v-model="branchingRoomId"
+            placeholder="Enter room ID"
+            required
+          />
+        </b-form-group>
 
       <!-- Button -->
-      <button
-        class="btn-submit"
-        @click="handleCreateRoom">
-        Create Room
-      </button>
+      <b-button type="submit" class="btn-submit">
+          Create Room
+        </b-button>
+    
+    </b-form>
+      </div>
 
+        </div>
+      </div>
     </div>
   </div>
 </template>

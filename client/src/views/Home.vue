@@ -5,7 +5,7 @@
     </div>
 
     <div class="nav-right">
-      <a class="nav-item" @click="$router.push('/admin')">Admin</a>
+      <a class="nav-item" @click="$router.push('/AdminLogin')">Admin</a>
     </div>
   </nav>
 
