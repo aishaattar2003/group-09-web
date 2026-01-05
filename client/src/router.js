@@ -10,9 +10,6 @@ import PasswordPage from './views/PasswordPage.vue'
 import ProfilePage from './views/ProfilePage.vue'
 import AdminPage from './views/AdminPage.vue'
 import UsersPage from "./views/UsersPage.vue"
-import AboutPage from "./views/AboutPage.vue"
-import ContactPage from "./views/ContactPage.vue"
-import SupportPage from "./views/SupportPage.vue"
 import CreateRooms from "./views/CreateRooms.vue"
 import AdminLogin from "./views/AdminLogin.vue"
 
@@ -31,9 +28,6 @@ const routes = [
   { path: '/profile', name: 'profile', component: ProfilePage },
   { path: '/admin', name: 'admin', component: AdminPage },
   { path: "/admin/users", name: "admin-users",component: UsersPage },
-  { path: "/about", name: "About page",component: AboutPage },
-  { path: "/support", name: "Support page",component: SupportPage },
-  { path: "/contact", name: "Contact page",component: ContactPage },
   { path: "/admin/createrooms", name: "Create Rooms",component: CreateRooms },
   { path: "/adminlogin", name: "AdminLogin", component: AdminLogin}
 ]
