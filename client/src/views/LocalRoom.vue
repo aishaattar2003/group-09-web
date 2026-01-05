@@ -510,6 +510,9 @@ export default {
     },
 
     async fetchMessages() {
+      if(!this.branchingRoomId){
+        console.log('The Branching room is not passed on', this.branchingRoomId)
+      }
       const res = await Api.get(
         `/branchingrooms/${this.branchingRoomId}/messages`
       );
