@@ -118,4 +118,4 @@ export default {
 };
 </script>
 
-<style scoped>@import "../style/CreateRooms.css";</style>
+<style scoped>@import "../styles/CreateRooms.css";</style>

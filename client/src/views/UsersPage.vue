@@ -54,4 +54,4 @@ export default {
 };
 </script>
 
-<style scoped>@import "../style/UsersPage.css";</style>
+<style scoped>@import "../styles/UsersPage.css";</style>

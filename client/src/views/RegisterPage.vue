@@ -14,7 +14,7 @@
                   v-model="userId"
                   type="text"
                   placeholder="Enter Username"
-                  required
+                  required autocomplete="username"
                 />
               </b-form-group>
 
@@ -23,7 +23,7 @@
                   v-model="personalNumber"
                   type="text"
                   placeholder="Enter Personal Number"
-                  required
+                  required auto
                 />
               </b-form-group>
 
@@ -43,7 +43,6 @@
                 </b-form-select>
               </b-form-group>
 
-              <!-- Password -->
               <b-form-group label="Password">
                 <b-form-input
                   v-model="password"
@@ -53,17 +52,14 @@
                 />
               </b-form-group>
 
-              <!-- Submit -->
               <b-button type="submit" variant="light" class="Register-btn">
                 Register
               </b-button>
 
-              <!-- Error -->
               <b-alert v-if="error" show class="mt-3">
                 {{ error }}
               </b-alert>
 
-              <!-- Login link -->
               <p class="login-text mt-3">
                 Already have an account?
                 <router-link to="/login">Log in</router-link>
@@ -135,4 +131,4 @@ export default {
   }
 };
 </script>
-<style scoped>@import "../style/RegisterPage.css";</style>
+<style scoped>@import "../styles/RegisterPage.css";</style>

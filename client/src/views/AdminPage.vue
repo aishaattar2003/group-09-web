@@ -158,4 +158,4 @@ export default {
 };
 </script>
 
-<style scoped>@import "../style/AdminPage.css";</style>
+<style scoped>@import "../styles/AdminPage.css";</style>

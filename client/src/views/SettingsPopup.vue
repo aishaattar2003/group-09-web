@@ -28,4 +28,4 @@ export default {
 };
 </script>
 
-<style scoped>@import "../style/NavigatePage.css";</style>
+<style scoped>@import "../styles/NavigatePage.css";</style>

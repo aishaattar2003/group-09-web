@@ -63,4 +63,4 @@ export default {
 </script>
 
 
-<style scoped>@import "../style/MainPage.css";</style>
+<style scoped>@import "../styles/MainPage.css";</style>

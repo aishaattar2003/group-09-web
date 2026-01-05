@@ -79,4 +79,4 @@
     },
   };
   </script>
-  <style scoped>@import "../style/AdminLogin.css";</style>
+  <style scoped>@import "../styles/AdminLogin.css";</style>
