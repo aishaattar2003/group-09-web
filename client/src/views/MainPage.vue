@@ -2,13 +2,10 @@
   <nav class="soft-navbar">
     <div class="nav-left">
       <a class="nav-item" @click="$router.push('/main')">Home</a>
-      <span class="divider">|</span>
-      <a class="nav-item" @click="$router.push('/about')">About</a>
     </div>
 
     <div class="nav-right">
     <a v-if="!isAdmin" class="nav-item" @click="$router.push('/contact')">Contact</a>
-    <span class="divider">|</span>
     <a class="nav-item" @click="$router.push(isAdmin ? '/admin' : '/profile')"> {{ isAdmin ? 'Admin' : 'Profile' }}</a>
     </div>
   </nav>
@@ -108,12 +105,6 @@ export default {
 
 .nav-item:hover {
   color: white;
-}
-
-.divider {
-  color: rgba(255, 255, 255, 0.4);
-  margin: 0 10px;
-  font-size: 1.1rem;
 }
 
 .page-wrapper {
