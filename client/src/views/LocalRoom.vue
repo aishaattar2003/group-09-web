@@ -86,17 +86,17 @@
                     </div>
                 </div>
 
-                <small class="message-font-style">
+                <small class="message-font-style fw-light"><em>
                     {{ msg.anonymousName}}
-                </small>
+                </em></small>
 
-                <p class="message-text-style">
+                <p class="message-text-style  fs-6 fw-semibold">
                     {{ msg.Body }}
                 </p>
 
-                <small class="message-font-style">
+                <small class="message-font-style  fw-light"> <em>
                     {{ new Date(msg.timestamp).toLocaleDateString() }}
-                </small>
+                </em></small>
 
                 </div>
 
@@ -320,6 +320,8 @@ export default {
         anonymousName: msg.senderAnonymousName,
         reactions: msg.Reactions || [],
         _links :msg._links|| null,
+        anonymousName: msg.Sender.anonymousName || msg.senderAnonymousName,
+
       });
       console.log(this.messages);
 
@@ -530,6 +532,8 @@ export default {
         timestamp: m.SendTimestamp,
         reactions: m.Reactions || [],
         _links:m._links|| null,
+        anonymousName: m.Sender.anonymousName || m.senderAnonymousName,
+
       }));
     },
 
