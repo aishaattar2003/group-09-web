@@ -62,7 +62,17 @@
   
           <div class="input-group">
             <label>New Language</label>
-            <input v-model="newLanguage" type="text" required />
+            <select v-model="newLanguage" required>
+                <option disabled value="">Select a language</option>
+
+                <option
+                  v-for="lang in languages"
+                  :key="lang.code"
+                  :value="lang.code">
+                  {{ lang.label }}
+                </option>
+              </select>
+
           </div>
   
           <p v-if="error" class="error">{{ error }}</p>
@@ -95,6 +105,20 @@ export default {
       newLanguage: "",
       error: "",
       success: "",
+      languages: [
+      { label: "Swedish", code: "sv" },
+      { label: "English", code: "en" },
+      { label: "Spanish", code: "es" },
+      { label: "French", code: "fr" },
+      { label: "German", code: "de" },
+      { label: "Italian", code: "it" },
+      { label: "Russian", code: "ru" },
+      { label: "Chinese (Mandarin)", code: "zh" },
+      { label: "Japanese", code: "ja" },
+      { label: "Korean", code: "ko" },
+      { label: "Hindi", code: "hi" },
+      { label: "Somali", code: "so" },
+    ]
     };
   },
 

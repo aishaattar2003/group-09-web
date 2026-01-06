@@ -43,6 +43,40 @@
   transition: all 0.3s ease;
 }
 
+select {
+  width: 100%;
+  padding: 15px;
+  border-radius: 50px !important;
+  border: none;
+  background: #fadde8;
+  color: #2b0d2b;
+  font-size: 15px;
+  font-family: inherit;
+  outline: none;
+  box-sizing: border-box;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.select-wrapper {
+  position: relative;
+}
+
+.select-wrapper::after {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6d2a46;
+  pointer-events: none;
+  font-size: 16px;
+}
+
 .input-group label {
   font-size: 16px;
   margin-bottom: 8px;
