@@ -513,7 +513,7 @@ export default {
       }
 
       this.messages = res.data.map(m => ({
-        senderId: m.Sender._id,
+        senderId: m?.Sender?._id || null,
         ParentMessageId: m.ParentMessageId ? {
             ParentMessageObjectId:m.ParentMessageId._id,
             Body:m.ParentMessageId.Body,
