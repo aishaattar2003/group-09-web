@@ -18,6 +18,16 @@ const langMap = {
   som: "so"  // works
 };
 
+let francFn;
+
+async function detectLanguage(text) {
+  if (!francFn) {
+    const mod = await import("franc");
+    francFn = mod.franc;
+  }
+  return francFn(text);
+}
+
 async function translateText({ messageId, text, target }) {
   if (!messageId || !text || !target) {
     throw new Error("Missing messageId, text, or target language");
@@ -27,7 +37,6 @@ async function translateText({ messageId, text, target }) {
     translationCache[messageId] = {};
   }
 
-  // Return cached translation
   if (translationCache[messageId][target]) {
     return {
       translated: translationCache[messageId][target],
@@ -36,8 +45,8 @@ async function translateText({ messageId, text, target }) {
     };
   }
 
-  const detectedLang = franc(text);
-  const source = langMap[detectedLang] || "en"; 
+  const detectedLang = await detectLanguage(text);
+  const source = langMap[detectedLang] || "en";
 
   try {
     const apiRes = await axios.get(
@@ -61,7 +70,6 @@ async function translateText({ messageId, text, target }) {
       };
     }
 
-    // Save to cache
     translationCache[messageId][target] = translated;
 
     return {
