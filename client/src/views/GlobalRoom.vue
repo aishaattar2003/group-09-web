@@ -487,8 +487,12 @@ export default {
       });
 
 
-      const room = res.data.Body?.[0];
+      const room = res?.data?.Body?.[0];
       this.branchingRoomId = room ? room.branchingRoomId : '';
+      if(!this.branchingRoomId){
+        console.error('The branching room does not exist');
+        return;
+      }
       console.log(this.branchingRoomId);
 
       if (this.branchingRoomId) {
@@ -504,8 +508,9 @@ export default {
         `/branchingrooms/${this.branchingRoomId}/messages`
       );
 
+
       this.messages = res.data.map(m => ({
-        senderId: m.Sender._id,
+        senderId: m?.Sender?._id || null,
         ParentMessageId: m.ParentMessageId ? {
             ParentMessageObjectId:m.ParentMessageId._id,
             Body:m.ParentMessageId.Body,
