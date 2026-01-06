@@ -1,9 +1,10 @@
 const { generateAnonymousName, deleteAnonymousName } = require("../services/anonymousNames.services");
-require("dotenv").config();
-const {createMessageInABranchingRoom} = require("../services/createMessageInBranchingRoom.services");
-const {responceToMessageInABranchingRoom} = require("../services/responceToMessageInABranchingRoom.services");
-const {reactToMessageInBranchingRoom} = require("../services/reactToMessageInBranchingRoom.services");
+const UserModel = require('../models/user.model');
 
+
+const { usersAnonymousNamesMap } = require("../services/usersAnonymousNames.services");
+
+require("dotenv").config();
 
 
 module.exports = function (io) {
@@ -13,7 +14,6 @@ module.exports = function (io) {
         console.log("new Connection: ",socket.id);
 
         // Initialize variables
-        socket.anonymousNames = new Map();
         socket.roomId = null;
         socket.userId = null;    
         socket.currentRoom = null;
@@ -26,40 +26,34 @@ module.exports = function (io) {
         });
         
         // user joins room
-        socket.on("join room", async (data) => {
-            
-            
-            const { userId, roomId } = data;
+        socket.on("join room", async ({ userId, roomId }) => {
             console.log("➡ join room:", { socketId: socket.id, userId, roomId });
 
             try {
-                socket.roomId = roomId;
-                socket.userId = userId;
-
-                // leave previous room
                 if (socket.currentRoom) {
-                    const prevName = socket.anonymousNames.get(socket.currentRoom);
-                    if (prevName) deleteAnonymousName(prevName);
-                    socket.leave(socket.currentRoom);
-                    socket.anonymousNames.delete(socket.currentRoom);
+                socket.leave(socket.currentRoom);
                 }
 
                 socket.join(roomId);
                 socket.currentRoom = roomId;
+                socket.userId = userId;
 
-                const name = generateAnonymousName();
-                socket.anonymousNames.set(roomId, name);
+                const findUser = await UserModel.findById(userId);
+                const existAnonymousName = findUser.anonymousName;
+
+                
+                const anonName = existAnonymousName ? existAnonymousName: generateAnonymousName();
+                usersAnonymousNamesMap.set(`${roomId}:${socket.id}`, anonName);
+                const userSaved = await UserModel.findByIdAndUpdate(socket.userId, { anonymousName: anonName });
+                console.log('userAnonymousName', userSaved)
 
             } catch (err) {
-                console.log("Join room error:", err);
+                console.error("Join room error:", err);
             }
-        });
- 
-        // user disconnects
-        socket.on("disconnect", () => {
-           for (const name of socket.anonymousNames.values()) {
-            deleteAnonymousName(name);
-        }
-        });
-    });
-}
+            });
+            socket.on("disconnect", () => {
+            console.log("socket disconnected:", socket.id);
+            });
+
+  });
+};

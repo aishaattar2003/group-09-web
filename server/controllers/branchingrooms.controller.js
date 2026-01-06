@@ -3,6 +3,8 @@ const BranchingRoom = require("../models/branchingroom.model");
 const messagesModel = require("../models/message.model");
 const User = require("../models/user.model");
 const {toMessageResource} = require("../services/toMessageResource.services");
+const { usersAnonymousNamesMap } = require("../services/usersAnonymousNames.services");
+
 
 
 
@@ -45,11 +47,21 @@ const createMessageInABranchingRoom = async function(req, res, next){
         const branchingRoomObjectId = branchingRoom._id;
 
         const newMessage = await messagesModel.create({BranchingRoom: branchingRoomObjectId, ...req.body});
+    
 
         const newMessageWithResources = toMessageResource(newMessage,branchingRoomId);
 
         const io = req.app.get("io");
-        io.to(branchingRoomId).emit("chat message", newMessageWithResources);
+        const { socketId } = req.body;
+
+        const anonName =
+        usersAnonymousNamesMap.get(`${branchingRoomId}:${socketId}`) || "anonymous";
+
+        io.to(branchingRoomId).emit("chat message", {
+        ...newMessageWithResources,
+        senderAnonymousName: anonName
+        });
+
         res.status(201).json({message: "Success", Object: newMessage});
 
     }catch (err){
@@ -63,6 +75,7 @@ const createMessageInABranchingRoom = async function(req, res, next){
 const respondtoMessageInABranchingRoom = async function(req, res, next){
        try{
         const {branchingRoomId} = req.params;
+        const { socketId } = req.body;
 
         const branchingRoom = await BranchingRoom.findOne({branchingRoomId: branchingRoomId});        
         if(!branchingRoom){ return res.status(409).json({message:"The Branching Room Does not exists"});}
@@ -81,8 +94,15 @@ const respondtoMessageInABranchingRoom = async function(req, res, next){
 
         const newResponseWithResources = toMessageResource(newResponseMessage,branchingRoomId);
 
-        const io = req.app.get("io");
-        io.to(branchingRoomId).emit("respond to a message", newResponseWithResources);
+        const anonName =
+            usersAnonymousNamesMap.get(`${branchingRoomId}:${socketId}`) || "anonymous";
+
+            const io = req.app.get("io");
+
+            io.to(branchingRoomId).emit("respond to a message", {
+            ...newResponseWithResources,
+            senderAnonymousName: anonName
+            });
 
         res.status(201).json({message: "Success", Object: newResponseMessage});
 

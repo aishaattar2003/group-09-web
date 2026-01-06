@@ -95,17 +95,17 @@
                     </div>
                 </div>
 
-                <small class="message-font-style">
+                <small class="message-font-style fw-light"><em>
                     {{ msg.anonymousName}}
-                </small>
+                </em></small>
 
-                <p class="message-text-style">
+                <p class="message-text-style fs-6 fw-semibold">
                     {{ msg.isTranslated ? msg.translatedBody : msg.Body }}
                 </p>
 
-                <small class="message-font-style">
+                <small class="message-font-style fw-light"><em>
                     {{ new Date(msg.timestamp).toLocaleDateString() }}
-                </small>
+                </em></small>
 
                 </div>
 
@@ -327,6 +327,7 @@ export default {
                 anonymousName: msg.senderAnonymousName,
                 reactions: msg.Reactions || [],
                 _links :msg._links|| null,
+                anonymousName: msg.Sender.anonymousName || msg.senderAnonymousName,
             });
         this.$nextTick(()=>{
             this.scrollToBottom();
@@ -501,6 +502,7 @@ export default {
       const res = await Api.get(
         `/branchingrooms/${this.branchingRoomId}/messages`
       );
+      console.log(res);
 
 
       this.messages = res.data.map(m => ({
@@ -521,6 +523,9 @@ export default {
         timestamp: m.SendTimestamp,
         reactions: m.Reactions || [],
         _links:m._links|| null,
+        anonymousName: m.Sender.anonymousName || m.senderAnonymousName,
+
+
       }));
     },
 
@@ -555,6 +560,7 @@ export default {
         Reaction: null,
         ResponseIds: [],
         Sender: this.senderObjectId,
+        socketId: this.socket.id 
 
       };
 
@@ -563,12 +569,15 @@ export default {
           await followLink(msg._links.createResponse, payload);
         this.parentMessageId = '';
       } else {
-          await Api.post(`/branchingrooms/${this.branchingRoomId}/messages/`, payload);
+          const newMessage = await Api.post(`/branchingrooms/${this.branchingRoomId}/messages/`, payload);
+          console.log("Message sent:", newMessage);
       }
 
       this.message = '';
       this.replyBannerActive='';
       this.parentMessageContent="";
+
+
     },
 
     toggleReactionMenu(msg) {
