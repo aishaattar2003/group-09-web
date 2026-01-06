@@ -733,6 +733,14 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+}
+.room-tittle{
+      display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+
 }
 
 .header-title-style {
@@ -752,6 +760,13 @@ export default {
     justify-content: center;
     width: clamp(200px, 20vw, 330px);
     max-width: 70%;
+}
+
+
+.global-icon {
+    width: 35px;  
+    height: 40px;
+    object-fit: contain;
 }
 
 .category-title-style {
@@ -1300,9 +1315,5 @@ export default {
   color:#2b0d2b; 
   font-weight: bold;   
 }
-
-
-
-
 
 </style>
