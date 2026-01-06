@@ -432,10 +432,6 @@ export default {
       this.activeMessageOption = messageId;
       const msg = this.messages.find(m => m.messageId === messageId);
       this.messageRelatedLinks = msg?._links || null;
-      console.log("this is the message", msg);
-      console.log("this is the message related links", this.messageRelatedLinks);
-
-
     },
 
     closeOptionMenu() {
@@ -453,10 +449,9 @@ export default {
     async deleteMessage(msg){
 
       try{
-        console.log(msg);
         const deleteLink = msg?._links?.deleteMessage;
         if(!deleteLink){
-          console.log("No Delete Link on message");
+          console.warn("No Delete Link on message");
           return;
         }
         await followLink(deleteLink);
@@ -493,7 +488,6 @@ export default {
         console.error('The branching room does not exist');
         return;
       }
-      console.log(this.branchingRoomId);
 
       if (this.branchingRoomId) {
         await this.fetchMessages();
@@ -502,7 +496,7 @@ export default {
 
     async fetchMessages() {
       if(!this.branchingRoomId){
-        console.log('The Branching room is not passed on', this.branchingRoomId)
+        console.error('The Branching room is not passed on', this.branchingRoomId)
       }
       const res = await Api.get(
         `/branchingrooms/${this.branchingRoomId}/messages`
@@ -566,7 +560,6 @@ export default {
 
       if (this.parentMessageId) {
           const msg = this.messages.find(m=> m.messageId === this.parentMessageId);
-          console.log(msg._links.createResponse);
           await followLink(msg._links.createResponse, payload);
         this.parentMessageId = '';
       } else {
@@ -606,7 +599,6 @@ export default {
         const msg = this.messages.find(m => m.messageId === messageId);
 
         const res = followLink(msg._links.reactToMessage, payload);
-        console.log(res);
 
       if (msg) {
         msg.reactions = res.data.reactions || [];
