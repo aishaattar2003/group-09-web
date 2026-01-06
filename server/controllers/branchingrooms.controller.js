@@ -22,6 +22,12 @@ const createBranchingRoom = async function(req, res, next){
             res.status(400).json({message: "Invalid Branching Room Topic"});            
         }
 
+        const branchingRoomExists = await BranchingRoom.findOne({branchingRoomType: branchingRoomType, roomTopic: roomTopic });
+
+        if(branchingRoomExists){
+            res.status(400).json({message:"Branching Room Already Exist"});
+        }
+
         const SingleBrancingRooms = await BranchingRoom.create(req.body);
         res.status(201).json({message: "Success", Object: SingleBrancingRooms});
     }catch(err){
