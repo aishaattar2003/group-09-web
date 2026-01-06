@@ -601,7 +601,7 @@ export default {
         const res = followLink(msg._links.reactToMessage, payload);
 
       if (msg) {
-        msg.reactions = res.data.reactions || [];
+        msg.reactions = res?.data?.reactions || [];
       }
 
       this.closeOptionMenu();
