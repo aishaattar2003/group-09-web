@@ -2,6 +2,8 @@ const express = require('express');
 const MessagesRoute = express.Router();
 const Message = require('../models/message.model');
 const { Query } = require('mongoose');
+const { translateText } = require("../services/translation.services");
+
 
 
 // POST createMessage
@@ -147,16 +149,23 @@ const translateMessage = async (req, res, next) => {
     }
 
     const result = await translateText({
-      messageId,
+      messageId: msg.messageId,
       text: msg.Body,
-      targetLang
+      target: targetLang
     });
 
-    res.status(200).json(result);
+    console.log("TRANSLATION RESULT:", result);
+
+    return res.status(200).json({
+      translated: result.translated,
+      cached: result.cached
+    });
+
   } catch (err) {
     next(err);
   }
 };
+
 
 
 // PATCH patchMessage

@@ -1,42 +1,83 @@
 const axios = require("axios");
+const { franc } = require("franc");
 
-// runtime cache
 const translationCache = {};
 
-async function translateText({ messageId, text, targetLang }) {
+const langMap = {
+  eng: "en", // works
+  fra: "fr", // works
+  swe: "sv", // works
+  spa: "es", // works
+  deu: "de", // works
+  ita: "it", // works
+  rus: "ru", // works
+  cmn: "zh", // works
+  jpn: "ja", // works
+  kor: "ko", // works
+  hin: "hi", // works
+  som: "so"  // works
+};
+
+async function translateText({ messageId, text, target }) {
+  if (!messageId || !text || !target) {
+    throw new Error("Missing messageId, text, or target language");
+  }
+
   if (!translationCache[messageId]) {
     translationCache[messageId] = {};
   }
 
-  // return cached
-  if (translationCache[messageId][targetLang]) {
+  // Return cached translation
+  if (translationCache[messageId][target]) {
     return {
-      translated: translationCache[messageId][targetLang],
-      cached: true
+      translated: translationCache[messageId][target],
+      cached: true,
+      failed: false
     };
   }
 
-  // external API call
-  const apiRes = await axios.post(
-    "https://libretranslate.com/translate",
-    {
-      q: text,
-      source: "auto",
-      target: targetLang
-    },
-    { headers: { "Content-Type": "application/json" } }
-  );
+  const detectedLang = franc(text);
+  const source = langMap[detectedLang] || "en"; 
 
-  const translated = apiRes.data.translatedText;
+  try {
+    const apiRes = await axios.get(
+      "https://api.mymemory.translated.net/get",
+      {
+        params: {
+          q: text,
+          langpair: `${source}|${target}`
+        }
+      }
+    );
 
-  translationCache[messageId][targetLang] = translated;
+    const translated =
+      apiRes.data?.responseData?.translatedText || null;
 
-  return {
-    translated,
-    cached: false
-  };
+    if (!translated || translated.trim() === "") {
+      return {
+        translated: text,
+        cached: false,
+        failed: true
+      };
+    }
+
+    // Save to cache
+    translationCache[messageId][target] = translated;
+
+    return {
+      translated,
+      cached: false,
+      failed: false
+    };
+
+  } catch (err) {
+    console.error("Translation error:", err.message);
+    return {
+      translated: text,
+      cached: false,
+      failed: true
+    };
+  }
 }
 
-module.exports = {
-  translateText
-};
+module.exports = { translateText };

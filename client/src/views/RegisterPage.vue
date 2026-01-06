@@ -91,20 +91,16 @@ export default {
     languages: [
       { label: "Swedish", code: "sv" },
       { label: "English", code: "en" },
-      { label: "Arabic", code: "ar" },
       { label: "Spanish", code: "es" },
       { label: "French", code: "fr" },
       { label: "German", code: "de" },
       { label: "Italian", code: "it" },
-      { label: "Portuguese", code: "pt" },
       { label: "Russian", code: "ru" },
       { label: "Chinese (Mandarin)", code: "zh" },
       { label: "Japanese", code: "ja" },
       { label: "Korean", code: "ko" },
       { label: "Hindi", code: "hi" },
-      { label: "Turkish", code: "tr" },
-      { label: "Persian", code: "fa" },
-      { label: "Somali", code: "so" }
+      { label: "Somali", code: "so" },
     ]
   };
 },

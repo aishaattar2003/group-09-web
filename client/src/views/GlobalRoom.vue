@@ -639,6 +639,11 @@ export default {
               }
             );
             
+            if (res.data.failed) {
+              console.warn("Translation failed, keeping original text");
+              return;
+            }
+            
             msg.translatedBody = res.data.translated;
             msg.isTranslated = true;
             
