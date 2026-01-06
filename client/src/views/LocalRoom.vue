@@ -1,57 +1,57 @@
 <template>
-    <div class="backgroundStyle" :class="{ light: isLight }">
+    <div class="background-style" :class="{ light: isLight }">
 
         <!-- Head banner -->
-        <div class="head_banner">
+        <div class="head-banner-wrapper row gx-3 d-flex  align-items-center justify-content-between px-2 px-md-3">
 
             <!-- Left logo -->
-            <div class="logoWrapper">
-                <img class="logo" 
+            <div class="logo-wrapper">
+                <img class="logo-style border-0 bg-transparent" 
                 src="@/assets/HMO_logo.png" 
                 alt="App Logo" />
             </div>
 
 
         <!-- Localroom title and branching room type -->
-            <div class="HeaderFlexBox">
-                <h1 class="head_title_style">LOCAL ROOM</h1>
+            <div class="header-flex-box d-flex">
+                <h1 class="header-title-style">LOCAL ROOM</h1>
 
-                <div class="categoryDivStyle">
-                    <h2 class="categoryTitleStyle">
+                <div class="category-div-style d-flex column">
+                    <h2 class="category-title-style">
                         {{ this.branchingRoomTopic}}
                     </h2>
                 </div>
             </div>
 
             <!-- Menu button -->
-            <div class="MenuButtonFlex">
-                <button class="buttonIconStyle" @click="openMenu">
-                    <FontAwesomeIcon icon="list-ul" size="2xl" style="color: aliceblue;" />
+            <div class="menu-button-flex">
+                <button class="button-icon-style btn-sm" @click="openMenu">
+                    <FontAwesomeIcon icon="list-ul" size="xl" style="color: aliceblue;" />
                 </button>
             </div>
         </div>
 
         <!-- Side menu -->
         <div 
-            class="sideMenuOverlay" 
+            class="side-menu-overlay" 
             v-if="isMenuOpen" 
             @click="closeMenu">
         </div>
 
         <div 
-            class="sideMenuWrapper"
+            class="side-menu-wrapper"
             :class="{ menuVisible: isMenuOpen }">
 
-            <div class="sideMenuContent">
-                <button class="sideMenuButton" @click="changeRoomTopic('General')">General</button>
-                <button class="sideMenuButton" @click="changeRoomTopic('Scandle')">Scandle</button>
-                <button class="sideMenuButton" @click="changeRoomTopic('Travel')">Travel</button>
-                <button class="sideMenuButton" @click="changeRoomTopic('Movies')">Movies</button>
-                <button class="sideMenuButton" @click="changeRoomTopic('Books')">Books</button>
-                <button class="sideMenuButton" @click="changeRoomTopic('Sports')">Sports</button>
-                <button class="sideMenuButton" @click="changeRoomTopic('Relationships')">Relationships</button>
-                <button class="sideMenuButton" @click="changeRoomTopic('Food')">Pets</button>
-                <button class="sideMenuButton" @click="changeRoomTopic('School')">Politics</button>
+            <div class="side-menu-content">
+                <button class="side-menu-button btn" @click="changeRoomTopic('General')">General</button>
+                <button class="side-menu-button btn" @click="changeRoomTopic('Scandle')">Scandle</button>
+                <button class="side-menu-button btn" @click="changeRoomTopic('Travel')">Travel</button>
+                <button class="side-menu-button btn" @click="changeRoomTopic('Movies')">Movies</button>
+                <button class="side-menu-button btn" @click="changeRoomTopic('Books')">Books</button>
+                <button class="side-menu-button btn" @click="changeRoomTopic('Sports')">Sports</button>
+                <button class="side-menu-button btn" @click="changeRoomTopic('Relationships')">Relationships</button>
+                <button class="side-menu-button btn" @click="changeRoomTopic('Food')">Pets</button>
+                <button class="side-menu-button btn" @click="changeRoomTopic('School')">Politics</button>
             </div>
         </div>
 
@@ -66,16 +66,12 @@
                 v-for="msg in messages"
                 :key="msg.messageId" 
                 :ref="`msg-${msg.messageId}`"
-                class="messageRow"
+                class="message-row-wrapper"
                 :class="[String(msg.senderId) === String(this.senderObjectId) ? 'my-message':'others-message',
-                    activeMessageOption === msg.messageId ? 'messageActive' : ''
+                    activeMessageOption === msg.messageId ? 'message-active' : ''
                 ]">
-                <!--Parent Message If Responce Ids-->
-                <!--If the current message is a responce to another message it should display the parent message on top-->
-                <!--We can take the parent message and fetch its content on the fly and when the user sends the response message we just attact it -->
                 
-
-                <div class="messageDetailWrapper">
+                <div class="message-detail-wrapper">
                     <div
                     v-if="msg.ParentMessageId"
                     class="replyPreview"
@@ -83,7 +79,7 @@
                     >
                     <div class="replyBar"></div>
                     <div class="replyContent">
-                        <small class="replyLabel">Replying to</small>
+                        <small class="replyLabel"><em>Replying to</em></small>
                         <p class="replyText">
                             {{ msg.ParentMessageId.Body }}
                         </p>
@@ -119,30 +115,31 @@
 
 
                 <div 
-                    class="optionButtonWrapper">
-                    <button class="optionButtonStyle" @click.stop="openOptionMenu(msg.messageId)">•••</button>
+                    class="option-button-wrapper">
+                    <button class="option-button-style btn-sm" @click.stop="openOptionMenu(msg.messageId)">•••</button>
                 </div>
                 
                 <!-- Option Menu -->
-                <div 
-                    class="optionMenuOverlay"
+
+                 <div 
+                    class="option-menu-overlay "
                     v-if="activeMessageOption === msg.messageId"
                     @click.self="closeOptionMenu()">
 
-                    <div class="optionMenuContent" @click.stop>
+                    <div class="option-menu-content" @click.stop>
                     <!-- Everyone can reply -->
-                    <button class="optionMenuButton" @click="replyToMessage(msg)">Reply</button>
+                    <button class="option-menu-button btn-sm" @click="replyToMessage(msg)">Reply</button>
                     <!-- Everyone can react -->
-                    <button class="optionMenuButton" @click="toggleReactionMenu(msg)">React</button>
+                    <button class="option-menu-button btn-sm" @click="toggleReactionMenu(msg)">React</button>
                     <!-- only sender can edit -->
                     <button
                       v-if="String(msg.senderId) === String(senderObjectId)"
-                      class="optionMenuButton"
+                      class="option-menu-button btn-sm"
                       @click="editMessage(msg)">Edit</button>
                     <!-- only sender can delete -->
                     <button
                       v-if="String(msg.senderId) === String(senderObjectId)"
-                      class="optionMenuButton"
+                      class="option-menu-button btn-sm"
                       @click="deleteMessage(msg)">Delete</button>
 
                 </div>
@@ -169,15 +166,15 @@
         <!--Parent Message in case of responce-->   
         <div
          v-if="this.replyBannerActive"
-         class ="parentMessageResponceLayout"
-         :class="[this.replyBannerActive ? showParentMessage: '']">
+         class ="parent-message-responce-layout d-flex column px-3 px-md-3"
+         :class="[this.replyBannerActive ? show-parent-message: '']">
 
-         <div class="parentMessageTextLayout">
-            <small>Replying to {{this.replyBannerActive }}</small>
-            <p>{{this.parentMessageContent }}</p>
+         <div class="parent-message-text-layout">
+            <small><em>Replying to {{this.replyBannerActive }}</em></small>
+            <p><strong>{{this.parentMessageContent }}</strong></p>
 
          </div>
-         <button @click.self="DisableReplyBanner()" class="closeButtonIconStyle">x</button>
+         <button @click.self="DisableReplyBanner()" class="close-button-icon-style">x</button>
 
 
         </div>
@@ -187,22 +184,21 @@
         </div>
         
         <!-- Footer and bottom banner -->
-        <div class="messageBoxFlex">
+        <div class="message-box-flex d-flex justify-content-around">
             
-            <img 
-                class="profileDetailWrapper"
-                src="@/assets/HMO_logo.png"
-                alt="profilePic"
-            />
+            <b-avatar variant="success" icon="people-fill"></b-avatar>
 
-            <div class="messageBoxWrapper">
-                <form class="inputContainer" @submit.prevent="sendMessage">
-                    <input class ='messageBoxStyle'type="text" v-model="message" :disabled="chatPaused" :placeholder=" 
-                      chatPaused ? 'Chat is paused' : 
-                      isEditing ? 'Editing message…' : 
-                      'Send a confession or help a fellow....' " />
-                        <button class="sendbuttonInside" type="submit" :disabled="chatPaused">
-                            <FontAwesomeIcon  icon="paper-plane" size="xl"style="color: #2b0d2b;"  />
+            <div class="message-box-wrapper">
+                <form class="input-container" @submit.prevent="sendMessage">
+                    <input class ='message-box-style form-control 'type="text" v-model="message" :disabled="chatPaused" :placeholder="chatPaused ? 'Chat is paused' :    isEditing ? 'Editing message…' : 'Send a confession...'"/>
+                        <button class="send-button-Inside" type="submit" :disabled="chatPaused">
+                            <FontAwesomeIcon  icon="paper-plane" size="l"style="color: #2b0d2b;"  />
+                        </button>
+                        <button v-if="isEditing" class="cancelbuttonInside" @click="cancelEdit">
+                          <FontAwesomeIcon  icon="fa-solid fa-xmark" size="xl"style="color: #2b0d2b;" />
+                        </button>
+                        <button v-if="isEditing" class="cancelbuttonInside" @click="cancelEdit">
+                          <FontAwesomeIcon  icon="fa-solid fa-xmark" size="xl"style="color: #2b0d2b;" />
                         </button>
                         <button v-if="isEditing" class="cancelbuttonInside" @click="cancelEdit">
                           <FontAwesomeIcon  icon="fa-solid fa-xmark" size="xl"style="color: #2b0d2b;" />
@@ -210,16 +206,17 @@
                 </form>
             </div>
 
-            <div class="ThemeToggle">
-              <button class="ThemeToggle" @click="toggleTheme">
-                {{ isLight ? "🌙 Dark" : "☀ Light" }}
+            <div class="ThemeToggle ">
+              <button class=" btn-sm btn-outline-light bg-transparent d-flex text-light border-0" @click="toggleTheme">
+                <small>{{ isLight ? "🌙" : "☀" }}</small>
+                <small class="d-none d-md-flex align-items-center gap-2">{{ isLight ? "Dark" : "Light" }}</small>
               </button>
             </div>
 
             <!-- Exit button -->
-            <div class="exitButtonWrapper">
-            <button class="buttonIconStyle" @click="showSettings = true">
-               <FontAwesomeIcon icon="arrow-right-from-bracket" size="2xl"style="color: aliceblue;" />
+            <div class="exit-button-wrapper">
+            <button class="button-icon-style btn-sm" @click="showSettings = true">
+               <FontAwesomeIcon icon="arrow-right-from-bracket" size="xl"style="color: aliceblue;" />
                 </button>
             </div>
 
@@ -272,17 +269,13 @@ export default {
       replyBannerActive: '',
       isLight: false,
       showSettings: false,
-      selectedMessageId:'',
       chatPaused: false,
       chatPausedMessage: "",
       messageInput: "",
-      isEditing: false,
       originalEditMessage: '',
       messageRelatedLinks:null,
       selectedMessageId: null,
-
-
-      
+      isEditing:null
 
     };
   },
@@ -517,8 +510,13 @@ export default {
         `/branchingrooms/${this.branchingRoomId}/messages`
       );
 
+      if(!res){
+        console.log("No Messages in the branching room");
+        return;
+      }
+
       this.messages = res.data.map(m => ({
-        senderId: m.Sender._id,
+        senderId: m?.Sender?._id || null,
         ParentMessageId: m.ParentMessageId ? {
             ParentMessageObjectId:m.ParentMessageId._id,
             Body:m.ParentMessageId.Body,
@@ -636,8 +634,7 @@ export default {
 
 
 <style>
-
-.backgroundStyle {
+  .background-style {
     background-image: linear-gradient(#2b0d2b, #6d2a46);
     min-height: 100vh;
     width: 100%;
@@ -646,7 +643,7 @@ export default {
 }
 
 /* Header */
-.head_banner {
+.head-banner-wrapper {
     background-image: linear-gradient(#2b0d2b, #6d2a46);
     display: flex;
     position: fixed;
@@ -663,40 +660,40 @@ export default {
     height: var(--header-h);
 }
 
-.logoWrapper,
-.MenuButtonFlex {
+.logo-wrapper,
+.menu-button-flex {
     flex: 1;
     display: flex;
     align-items: center;
 }
 
-.logoWrapper {
+.logo-wrapper {
     justify-content: flex-start;
 }
 
-.MenuButtonFlex {
+.menu-button-flex {
     justify-content: flex-end;
 }
 
-.logo {
-    width: clamp(55px, 12vw, 100px);
+.logo-style {
+    width: clamp(45px, 12vw, 100px);
 }
 
-.HeaderFlexBox {
+.header-flex-box {
     flex: 2;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.head_title_style {
-    font-size: clamp(10px, 5vw, 35px);
+.header-title-style {
+    font-size: clamp(10px, 5vw, 30px);
     font-weight: bolder;
     color: rgb(249, 249, 249);
     margin: 0;
 }
 
-.categoryDivStyle {
+.category-div-style {
     background-color: #ffecec;
     border-radius: 10px;
     padding: 6px 16px;
@@ -704,12 +701,12 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: clamp(200px, 20vw, 400px);
+    width: clamp(200px, 20vw, 330px);
     max-width: 70%;
 }
 
-.categoryTitleStyle {
-    font-size: clamp(14px, 2vw, 50px);
+.category-title-style {
+    font-size: clamp(14px, 1.5vw, 25px);
     margin: 0;
     color: #2b0d2b;
 }
@@ -725,60 +722,68 @@ export default {
 }
 
 /* Side Menu */
-.sideMenuOverlay {
+.side-menu-overlay {
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.25);
     z-index: 1500;
 }
 
-.sideMenuWrapper {
+.side-menu-wrapper {
     position: fixed;
     top: var(--header-h);
-    right: -360px;
-    width: clamp(300px, 35vw, 400px);
+  right: 0;
+
+  width: min(400px, 80vw);
     height: calc(100dvh - var(--header-h) - var(--footer-h));
+
     background: rgba(255, 255, 255, 0.535);
     backdrop-filter: blur(6px);
     border-top-left-radius: 18px;
     border-bottom-left-radius: 18px;
-    padding: 14px 9px;
-    transition: right 0.35s ease;
+
+  padding: 20px 10px;
     z-index: 1600;
+
     overflow-y: auto;
     overflow-x: hidden;
+
+  transform: translateX(110%);
+  transition: transform 0.35s ease;
+  will-change: transform;
 }
 
-.sideMenuWrapper.menuVisible {
-    right: 0;
+.side-menu-wrapper.menuVisible {
+  transform: translateX(0);
 }
 
-.sideMenuContent {
+
+.side-menu-content {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-.sideMenuButton {
+.side-menu-button {
     width: 100%;
     padding: 12px 0px;
     background: linear-gradient(#2b0d2b, #6d2a46);
     border: none;
     border-radius: 16px;
-    color: #fff;
+    color: #fff !important;
     font-size: clamp(10px, 5vw, 20px);
     font-weight: 500;
     cursor: pointer;
     transition: 0.2s ease;
 }
 
-.sideMenuButton:hover {
+.side-menu-button:hover {
     opacity: 0.8;
     transform: scale(1.02);
 }
 
 /* Messages */
-.messageRow {
+.message-row-wrapper {
     position: relative;
     padding: clamp(5px, 1vw, 35px) clamp(15px, 2vw, 40px);
     width: fit-content;
@@ -790,7 +795,7 @@ export default {
     border-radius: 10px;
 }
 
-.messageActive {
+.message-active {
     box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.25);
 }
 
@@ -825,7 +830,7 @@ export default {
     opacity: 0.7;
 }
 
-.messageDetailWrapper {
+.message-detail-wrapper {
     display: flex;
     flex: 2;
     flex-direction: column;
@@ -834,14 +839,13 @@ export default {
 }
 
 
-.messageBoxFlex {
+.message-box-flex {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
     background-image: linear-gradient(#2b0d2b, #6d2a46);
     padding: clamp(2px, 1.5vw, 25px) clamp(2px, 0.5vw, 10px);
-    display: flex;
     align-items: center;
     gap: clamp(2px, 0.5vw, 5px);
     border-top-left-radius: 18px;
@@ -850,7 +854,7 @@ export default {
     height: var(--footer-h);
 }
 
-.parentMessageDisplay{
+.parent-message-display{
     display: flex;
     flex:1;
     background:#fdfdfd;
@@ -860,35 +864,35 @@ export default {
     top: 100%;
 }
 
-.profileDetailWrapper {
+.profile-detail-wrapper {
     width: 6vmax;
     height: 5vmax;
     border-radius: 1000px;
     object-fit: cover;
 }
 
-.messageBoxWrapper {
+.message-box-wrapper {
     flex: 1;
     display: flex;
     justify-content: center;
 }
 
-.inputContainer {
+.input-container {
     position: relative;
     width: 100%;
 }
 
-.messageBoxStyle {
+.message-box-style {
     width: 100%;
     height: 45px;
     border-radius: 12px;
     border: none;
     padding-left: 14px;
     padding-right: 50px;
-    font-size: clamp(1.5rem, 8vw, 5rem);
+    font-size: inherit
 }
 
-.parentMessageResponceLayout{
+.parent-message-responce-layout{
     position: fixed;
     bottom:var(--footer-h);
     display: flex;
@@ -896,25 +900,38 @@ export default {
     right:12px;
     width: auto;
     margin-top: 8px;
-    background: rgba(193, 133, 178, 0.92);
+    background: rgba(255, 184, 213, 0.28);
     backdrop-filter: blur(8px);
-    border-radius: 14px;
-    padding: 10px;
+    border-radius: 4px;
+    padding: 12px  14px 12px 18px;
     z-index: 20000;
     height: clamp(7vh, 65px, 15vh);
     box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
 }
 
-.parentMessageTextLayout{
+.parent-message-responce-layout::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 10px;
+  bottom: 10px;
+
+  width: 4px;
+  border-radius: 4px;
+
+  background: rgba(120, 40, 85, 0.542);
+}
+
+.parent-message-text-layout{
     flex-direction: column;
     flex: 3dvh;
 
 }
-.showParentMessage{
+.show-parent-message{
     right: 30px;
 }
 
-.sendbuttonInside {
+.send-button-Inside {
     background: transparent;
     border: none;
     position: absolute;
@@ -935,14 +952,14 @@ export default {
 }
 
 /* Option Menu */
-.optionButtonWrapper {
+.option-button-wrapper {
     flex: 1;
     display: flex;
     justify-content: flex-end;
     align-items: center;
 }
 
-.optionButtonStyle {
+.option-button-style {
     background: transparent;
     border: none;
     width: 30px;
@@ -955,11 +972,11 @@ export default {
     transition: background 0.15s ease;
 }
 
-.optionButtonStyle:hover {
+.option-button-style:hover {
     background: rgba(255, 255, 255, 0.18);
 }
 
-.optionMenuOverlay {
+.option-menu-overlay {
     position: absolute;
     left: 0;
     right: 0;
@@ -969,60 +986,61 @@ export default {
     backdrop-filter: blur(8px);
     border-radius: 14px;
     padding: 10px;
-    z-index: 20000;
+    z-index: 2000;
     box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
 }
 
-.others-message.optionMenuOverlay {
+.others-message.option-menu-overlay {
     left: 10px;
     right: auto;
 }
 
-.optionMenuOverlay.visibleOption {
+.option-menu-overlay.visibleOption {
     right: 0;
 }
 
-.optionMenuContent {
+.option-menu-content {
     display: flex;
     flex-direction: row;
-    gap: 10px;
+    gap: 5px;
     justify-content: space-between;
 }
 
-.optionMenuButton {
+.option-menu-button {
     all: unset;
     flex: 1;
     padding: 12px 0;
     border-radius: 12px;
     font-size: 15px;
     font-weight: 500;
-    color: #fff;
+    color: #fff !important;
     text-align: center;
     cursor: pointer;
     background: rgba(255, 255, 255, 0.18);
     transition: background 0.15s ease, transform 0.15s ease;
 }
 
-.optionMenuButton:hover {
+.option-menu-button:hover {
     background: rgba(255, 255, 255, 0.28);
     transform: translateY(-1px);
 }
 
 
-.settingButtonWrapper,
-.exitButtonWrapper {
+.setting-button-wrapper,
+.exit-button-wrapper {
     display: flex;
 }
 
-.buttonIconStyle {
+.button-icon-style {
     background: transparent;
     border: none;
     cursor: pointer;
 }
 
-.closeButtonIconStyle {
+.close-button-icon-style {
     background: transparent;
     border: none;
+    font-size: x-large;
     cursor: pointer;
 }
 .messageBox-style {
@@ -1087,35 +1105,35 @@ export default {
   left: 12px;
 }
 
-.light.backgroundStyle {
+.light.background-style {
   background: linear-gradient(#f5e1e6, #d6b2bf);
 }
 
-.head_title_style {
+.header-title-style {
   color: white;
 }
 
-.light .head_title_style {
+.light .header-title-style {
   color: #2b0d2b;
 }
 
-.buttonIconStyle svg {
+.button-icon-style svg {
   color: white;
 }
 
-.light .buttonIconStyle svg {
+.light .button-icon-style svg {
   color: #2b0d2b;
 }
 
-.light .head_banner {
+.light .head-banner-wrapper {
   background: linear-gradient(#f3dbe3, #caa0b1);
 }
 
-.light .categoryDivStyle {
+.light .category-div-style {
   background: #ffffff;
 }
 
-.light .categoryTitleStyle {
+.light .category-title-style {
   color: #5a2b44;
 }
 
@@ -1123,19 +1141,19 @@ export default {
   background: linear-gradient(#f5e1e6, #d6b2bf);
 }
 
-.light .sideMenuWrapper {
+.light .side-menu-wrapper {
   background: rgba(255, 255, 255, 0.85);
 }
 
-.light .sideMenuButton {
+.light .side-menu-button {
   background: linear-gradient(#7a3b5a, #9a5f7a);
 }
 
-.light .messageBoxFlex {
+.light .message-box-flex {
   background: linear-gradient(#f3dbe3, #caa0b1);
 }
 
-.light .messageBoxStyle {
+.light .message-box-style {
   background: white;
   color: #2b0d2b;
 }
@@ -1163,7 +1181,7 @@ export default {
   background: transparent;
   border: 1px solid rgba(255,255,255,0.35);
   color: white;
-  padding: 6px 8px;
+  padding: 4px 6px;
   border-radius: 20px;
   cursor: pointer;
   font-size: 0.9rem;
@@ -1197,6 +1215,15 @@ export default {
   flex-direction: column;
   overflow: hidden;
 }
+.replyContent::before {
+  content: "";
+  position: absolute;
+  left:8px;
+  top: 10px;
+  bottom: 10px;
+  width: 4px;
+  background:rgba(120, 40, 85, 0.542);
+}
 
 .replyLabel {
   font-size: 0.7rem;
@@ -1220,13 +1247,10 @@ export default {
   font-weight: 600;
 }
 
-.messageBoxStyle:disabled::placeholder {
+.message-box-style:disabled::placeholder {
   color:#2b0d2b; 
   font-weight: bold;   
 }
-
-
-
 
 
 </style>
