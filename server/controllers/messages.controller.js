@@ -2,13 +2,36 @@ const express = require('express');
 const MessagesRoute = express.Router();
 const Message = require('../models/message.model');
 const { Query } = require('mongoose');
+const { translateText } = require("../services/translation.services");
+
 
 
 // POST createMessage
 const createMessage = async function(req, res, next){
   try {
-    const newMessage = await Message.create(req.body);
-    res.send(201).json({message:"Successs", Object: newMessage});
+    if (!req.body.Body || req.body.Body.trim() === "") {
+      return res.status(400).json({ message: "Text is required" });
+    }
+    if (!req.body.Sender) {
+      return res.status(400).json({ message: "Sender is required" });
+    }
+    if (!req.body.BranchingRoom) {
+      return res.status(400).json({ message: "Branching Room is required" });
+    }
+
+    const randomSix = Math.floor(100000 + Math.random() * 900000);
+    const messageId = req.body.messageId || ("messageId" + randomSix);
+
+    const newMessage = await Message.create({
+    messageId,
+    Body: req.body.Body,
+    Sender: req.body.Sender,
+    BranchingRoom: req.body.BranchingRoom,
+    SendTimestamp: new Date(),
+    Reaction: null,
+    ResponseIds: []
+});
+    res.status(201).json({message:"Success", Object: newMessage});
     
   } catch (err) {
     next(err);
@@ -16,8 +39,7 @@ const createMessage = async function(req, res, next){
   
 };
 
-
-// POST createMessage
+// POST createResponseMessage
 const createResponseMessage = async function(req, res, next){
   try {
 //Check if the Message Already exists
@@ -34,12 +56,14 @@ const createResponseMessage = async function(req, res, next){
 
         res.status(201).json({message: "Success", Object: newReponseMessage});
 
-    
+
   } catch (err) {
     next(err);
   }
-  
+
 };
+
+
 
 // GET getMessageById with Filtering, Sorting, Field Selection and Pagination based on fields provided
 const getAllMessages = async function(req, res, next){
@@ -65,7 +89,7 @@ const getAllMessages = async function(req, res, next){
 
     if(req.query.fields){
       const selectedField = req.query.fields.split(",").join(" ");
-      query = query.select(selectedField);
+      query = query.select(selectedField + " messageId");
     }
     //pagination
     const limit = parseInt(req.query.limit , 10) || 10;
@@ -107,6 +131,43 @@ const getMessageById = async function(req, res, next){
 };
 
 
+// GET Translate message
+const translateMessage = async (req, res, next) => {
+  try {
+    const { messageId } = req.params;
+    const targetLang = req.query.target;
+
+    if (!targetLang) {
+      return res.status(400).json({
+        error: "target language required ?target=xx"
+      });
+    }
+
+    const msg = await Message.findOne({ messageId });
+    if (!msg) {
+      return res.status(404).json({ error: "Message not found" });
+    }
+
+    const result = await translateText({
+      messageId: msg.messageId,
+      text: msg.Body,
+      target: targetLang
+    });
+
+    console.log("TRANSLATION RESULT:", result);
+
+    return res.status(200).json({
+      translated: result.translated,
+      cached: result.cached
+    });
+
+  } catch (err) {
+    next(err);
+  }
+};
+
+
+
 // PATCH patchMessage
 const updateMessageById = async function(req, res, next)  {
   try {
@@ -119,7 +180,8 @@ const updateMessageById = async function(req, res, next)  {
     if (!patchedMessage) {
       return res.status(404).json({ error: 'Message not found' });
     }
-    res.status(200).json(patchedMessage);
+    res.status(200).json({message: "success", Object: patchedMessage});
+
   } catch (err) {
     next(err);
   }
@@ -159,4 +221,4 @@ const deleteMessageById = async function(req, res, next)  {
 
 
 
-module.exports = {createResponseMessage,createMessage, getAllMessages, getMessageById, updateMessageById, deleteAllMessages, deleteMessageById}
+module.exports = {createResponseMessage,createMessage, getAllMessages, getMessageById, translateMessage, updateMessageById, deleteAllMessages, deleteMessageById}

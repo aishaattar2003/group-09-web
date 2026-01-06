@@ -1,42 +1,59 @@
 <template>
-  <div>
-    <b-container fluid>
-      <h1 class="display-5 fw-bold">DIT342 Frontend</h1>
-      <p class="fs-4">Welcome to your DIT342 Frontend Vue.js App</p>
-      <b-button class="btn_message" variant="primary" v-on:click="getMessage()" >Get Message from Server</b-button>
-      <p class="col-xl-9">Message from the server:<br/>
-      {{ message }}</p>
-    </b-container>
+  <nav class="soft-navbar">
+    <div class="nav-left">
+      <a class="nav-item" @click="$router.push('/')">Home</a>
+    </div>
+
+    <div class="nav-right">
+      <a class="nav-item" @click="$router.push('/AdminLogin')">Admin</a>
+    </div>
+  </nav>
+
+  <div class="home-wrapper">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 col-md-10 col-lg-8 mx-auto">
+        <div class="content-box">
+        
+          <!-- logo -->
+          <img 
+            class="logo" 
+            src="@/assets/HMO_logo.png"
+            alt="App Logo"
+          />
+        
+          <!-- Titles -->
+          <h1 class="main-title">Hear Me Out</h1>
+          <h2 class="subtitle">We Listen & We Don't Judge</h2>
+        
+          <!-- Buttons -->
+          <div class="button-group">
+            <button class="btn-custom" @click="goRegister">Register</button>
+            <button class="btn-custom" @click="goLogin">Login</button>
+          </div>
+        
+        </div>
+      
+        <footer class="footer">© 2025 Hear Me Out — We Listen & We Don't Judge</footer>
+      
+      </div>
+      </div>
   </div>
+</div>
 </template>
 
 <script>
-// @ is an alias to /src
-import { Api } from '@/Api'
-
 export default {
-  name: 'home',
-  data() {
-    return {
-      message: 'none'
-    }
-  },
+  name: "Home",
   methods: {
-    getMessage() {
-      Api.get('/')
-        .then(response => {
-          this.message = response.data.message
-        })
-        .catch(error => {
-          this.message = error
-        })
+    goRegister() {
+      this.$router.push("/register");
+    },
+    goLogin() {
+      this.$router.push("/login");
     }
   }
-}
+};
 </script>
 
-<style>
-.btn_message {
-  margin-bottom: 1em;
-}
-</style>
+<style src="@/styles/Home.css"></style>

@@ -9,24 +9,44 @@ const createLocalRoom = async function(req, res, next){
     try{
         const localRoomsCount = await LocalRoom.estimatedDocumentCount();
         if(localRoomsCount>0){
-            return res.status(409).json({message:"Entity already exists"});
+            await LocalRoom.deleteMany();
         }
-        const SingleBranchingRoom = await LocalRoom.create(req.body);
-        res.status(201).json({message: "Success", Object: SingleLocalRooms});
+        const { roomId, country, liveChat } = req.body;
+
+        if(typeof liveChat !== "boolean"){
+            res.status(400).json({message: "Invalid data type for liveChat"});
+        }
+
+        ///
+
+        if (!roomId) {
+            return res.status(400).json({ message: "Room ID is required." });
+        }
+
+        if (!country || country.trim() === "") {
+            return res.status(400).json({ message: "Country is required." });
+        }
+
+        if (liveChat === undefined || typeof liveChat !== "boolean") {
+            return res.status(400).json({ message: "live Chat is required." });
+        }
+
+        const SingleLocalRooms = await LocalRoom.create({
+            roomId,
+            country,
+            liveChat
+        });
+
+        return res.status(201).json({message: "success", Object: SingleLocalRooms });
     }catch(err){
-        if(err.code===11000){
-            res.status(409).json({
-                message: "Entity Already Exists",
-                
-            });
-        }
+        next(err);
     } 
 
 };
 
 
 // GET: Read All Local Rooms
-const getAllUser = async function(req, res, next){
+const getLocalRoom = async function(req, res, next){
     try{
         const allRooms = await LocalRoom.find(req.body);
         res.status(200).json(allRooms);
@@ -36,43 +56,33 @@ const getAllUser = async function(req, res, next){
     } 
 };
 
-
-// Read One Local Rooms
-const getALocalRoom =  async function(req, res, next){
-    try{
-        const SingleLocalRooms = await LocalRoom.findOne({roomId: req.params.roomId}, req.body);
-        res.status(200).json(SingleLocalRooms);
-    }catch(err){
-        next(err);
-    } 
-
-};
-
-
 // Update One Local Room
-const updateLocalRoom =  async function(req, res, next){
-    try{
-        const { country, liveChat } = req.body;
-        if (!country) {
-            return res.status(400).json({ message: "Country is required." });
-        }
+const updateLocalRoom = async (req, res, next) => {
+  try {
+    const liveChat = req.body.liveChat;
 
-        if (liveChat === undefined) {
-            return res.status(400).json({ message: "live Chat is required." });
-        }
+    if (liveChat !== true && liveChat !== false) {
+      return res.status(400).json({ message: "liveChat must be true or false" });
+    }
 
-        const updatedRoom = await LocalRoom.findOneAndUpdate({ roomId: req.params.roomId },{ country, liveChat },{ new: true, runValidators: true });
-        
-        if (!updatedRoom) {
-            return res.status(404).json({ message: "Local room not found." });
-        } 
-        
-        return res.status(200).json({ message: "Success"});
+    const updatedRoom = await LocalRoom.findOneAndUpdate(
+      { _id: req.params.roomId },
+      { liveChat },
+      { new: true }
+    );
 
-    }   catch (err) {
-        next(err);
+    if (!updatedRoom) {
+      return res.status(404).json({ message: "Local room not found" });
+    }
+
+
+    res.status(200).json(updatedRoom);
+  } catch (err) {
+    next(err);
   }
 };
+
+
 
 // Delete One Local Rooms
 const deleteLocalRoomById = async function(req, res, next){
@@ -85,6 +95,7 @@ const deleteLocalRoomById = async function(req, res, next){
 
 };
 
-module.exports = {createLocalRoom, deleteLocalRoomById, getALocalRoom, getAllUser, updateLocalRoom};
+module.exports = {createLocalRoom, deleteLocalRoomById, getLocalRoom, updateLocalRoom};
+
 
 
