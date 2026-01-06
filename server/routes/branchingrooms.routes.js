@@ -1,7 +1,7 @@
 const express = require("express");
 const branchingRoomRoute  = express.Router();
 const branchingRoomController = require('../controllers/branchingrooms.controller');
-
+const { translateMessage } = require("../controllers/messages.controller");
 
 
 // Create One Brancing Rooms
@@ -30,6 +30,9 @@ branchingRoomRoute.get("/:branchingRoomId/messages", branchingRoomController.get
 
 // GET: Specific Message from a specific branching room
 branchingRoomRoute.get("/:branchingRoomId/messages/:messageId",branchingRoomController.getAMessageInABranchingRoom);
+
+// GET: Translated message
+branchingRoomRoute.get("/:branchingRoomId/messages/:messageId/translate", translateMessage);
 
 // PATCH: Update One Branhing Room
 branchingRoomRoute.patch("/:branchingRoomId", branchingRoomController.updateBranchingRoomTopic);

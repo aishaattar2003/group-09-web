@@ -174,7 +174,7 @@ const getAllBranchingRooms = async function(req, res, next){
 
         const { branchingRoomType, language } = req.query;
 
-        if (branchingRoomType === "LocalRoom" && language && language !== "swe")  {
+        if (branchingRoomType === "LocalRoom" && language && language !== "sv")  {
             return res.status(403).json({
                 message: "Local rooms are only available for Swedish speacking users"
             });
