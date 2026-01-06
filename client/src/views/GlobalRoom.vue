@@ -152,7 +152,7 @@
                       @click="deleteMessage(msg)">Delete</button>
                     <!-- only sender can delete -->
                     <button v-if="String(msg.senderId) !== String(senderObjectId)" 
-                     class="optionMenuButton"
+                     class="option-menu-button btn-sm"
                       @click="translateMessage(msg)">Translate</button>
                 </div>
 
