@@ -113,16 +113,17 @@
     #936480
   );
   max-width: 400px;
-  height: 310px;
+  min-height: 310px;
   border-radius: 40px;
-  padding: 3rem;
+  padding: 2.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 1.5rem;
   text-decoration: none;
   transition: transform 0.18s ease, background 0.18s ease;
-  justify-content: space-between;
 }
+
 
 
 .room-card:hover {
@@ -142,6 +143,7 @@
 }
 
 .room-icon {
-  max-width: 260px;
-  max-height: 170px;
+  width: 70%;
+  max-width: 220px;
+  height: auto;
 }

@@ -89,7 +89,7 @@ const loginUser = async function (req, res, next) {
     return res.status(200).json({
       message: "Admin login successful",
       userId: "admin",
-      language:"swe"
+      language:"sv"
     });
     }
 
