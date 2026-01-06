@@ -91,10 +91,12 @@ export default {
     languages: [
       { label: "Swedish", code: "sv" },
       { label: "English", code: "en" },
+      { label: "Arabic", code: "ar" },
       { label: "Spanish", code: "es" },
       { label: "French", code: "fr" },
       { label: "German", code: "de" },
       { label: "Italian", code: "it" },
+      { label: "Urdu", code: "ur" },
       { label: "Russian", code: "ru" },
       { label: "Chinese (Mandarin)", code: "zh" },
       { label: "Japanese", code: "ja" },
