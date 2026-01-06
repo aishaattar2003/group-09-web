@@ -53,6 +53,8 @@
 									"script": {
 										"exec": [
 											"pm.collectionVariables.set(\"userObjectId\", pm.response.json().Object._id);\r",
+											"pm.collectionVariables.set(\"userId\", pm.response.json().Object.userId);\r",
+											"\r",
 											""
 										],
 										"type": "text/javascript",
@@ -761,6 +763,42 @@
 										"v1",
 										"users",
 										"{{randomUserId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get all users",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/v1/users",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"users"
 									]
 								}
 							},
@@ -1956,6 +1994,82 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Duplicate Branching room",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"\r",
+											"// Randomly generate an Branching room id for automated tests\r",
+											"const randomBranchingRoomId = \"branchingRoom\"+Math.floor(Math.random()*100000000000)+1;\r",
+											"pm.collectionVariables.set(\"randomBranchingRoomId\", randomBranchingRoomId);\r",
+											"\r",
+											"\r",
+											"pm.test\r",
+											"(\"Check if the all the required fields are available in the request body\", ()=>{\r",
+											"    pm.expect(pm.request.body.raw).to.include(\"branchingRoomId\");\r",
+											"    pm.expect(pm.request.body.raw).to.include(\"roomTopic\");\r",
+											"    pm.expect(pm.request.body.raw).to.include(\"branchingRoomType\");\r",
+											"    pm.expect(pm.request.body.raw).to.include(\"parentRoomId\");\r",
+											"\r",
+											"})\r",
+											"\r",
+											"pm.test(\"Check if the branchingRoomId is unique\", () => {\r",
+											"    const jsonBody = JSON.parse(pm.request.body.raw);\r",
+											"    pm.expect(jsonBody.branchingRoomId).to.not.equal(pm.globals.get(\"branchingRoomId\"));\r",
+											"    \r",
+											"})\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Branching Room Already Exist\", ()=>{\r",
+											"    pm.expect(pm.response.json().message).to.eql(\"Branching Room Already Exist\");\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"branchingRoomId\": \"{{randomBranchingRoomId}}\",\r\n  \"roomTopic\": \"{{randomRoomTopic}}\",\r\n  \"branchingRoomType\": \"{{branchingRoomType}}\",\r\n  \"parentRoomId\":\"{{RoomObjectId}}\"\r\n}\r\n\r\n\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/v1/branchingrooms",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"branchingrooms"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -2182,6 +2296,72 @@
 										"v1",
 										"branchingrooms",
 										"{{branchingRoomId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Join Room",
+					"item": [
+						{
+							"name": "Join Room",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"})\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"pm.collectionVariables.set(\"userId\", pm.collectionVariables.get(\"userId\"));\r",
+											"pm.collectionVariables.set(\"randomBranchingRoomId\", pm.collectionVariables.get(\"randomBranchingRoomId\"));\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userId\":\"{{userId}}\" , \r\n    \"roomId\":\"{{randomBranchingRoomId}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/v1/branchingrooms/join",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"branchingrooms",
+										"join"
 									]
 								}
 							},
@@ -2483,7 +2663,7 @@
 					"name": "Get Messages inside a Branching room",
 					"item": [
 						{
-							"name": "All Messages in a Branching Room",
+							"name": "All Messages in a Branching Room Copy",
 							"event": [
 								{
 									"listen": "test",
@@ -2571,6 +2751,37 @@
 										"{{randomBranchingRoomId}}",
 										"messages",
 										"{{messageId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Translated message",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/v1/branchingrooms/{{branchingRoomId}}/messages/{{messageId}}/translate?target=sv",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"v1",
+										"branchingrooms",
+										"{{branchingRoomId}}",
+										"messages",
+										"{{messageId}}",
+										"translate"
+									],
+									"query": [
+										{
+											"key": "target",
+											"value": "sv"
+										}
 									]
 								}
 							},
@@ -2680,7 +2891,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"roomTopic\":\"\"\r\n    \r\n}",
+									"raw": "{\r\n    \"roomTopic\":\"sometopic\"\r\n    \r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2741,7 +2952,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"branchingRoomType\":\"\"\r\n    \r\n}",
+									"raw": "{\r\n    \"branchingRoomType\":\"somethingType\"\r\n    \r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
