@@ -171,7 +171,7 @@
         <div
          v-if="this.replyBannerActive"
          class ="parent-message-responce-layout d-flex column px-3 px-md-3"
-         :class="[this.replyBannerActive ? show-parent-message: '']">
+         :class="[this.replyBannerActive ? 'show-parent-message': '']">
 
          <div class="parent-message-text-layout">
             <small><em>Replying to {{this.replyBannerActive }}</em></small>
@@ -285,86 +285,7 @@ export default {
 
     };
   },
-
-  beforeUnmount() {
-    if (this.socket && this.chatListner) {
-      this.socket.off("chat message", this.chatListner);
-      this.socket.off("respond to a message", this.chatListner);
-      this.socket.off("respond to a message", (msg)=>{
-
-      });
-
-    }
-  },
-
-  async mounted() {
-    await this.getAllBranhingRooms();
-    this.scrollToBottom();
-
-    if (!this.socket.connected) {
-      this.socket.connect();
-    }
-
-    this.chatListner = (msg) => {
-      const exists = this.messages.some(m => m.messageId === msg.messageId);
-      if (exists) return;
-
-      console.log("This is a message we are testing",msg);
-
-      this.messages.push({
-        messageId: msg.messageId,
-        Body: msg.Body,
-        timestamp: msg.SendTimestamp,
-        ResponseIds: msg.ResponseIds || [],
-        senderId: msg.Sender,
-        ParentMessageId: msg.ParentMessageId?{
-            Body: msg.ParentMessageId.Body,
-            MessageId: msg.ParentMessageId.messageId,
-            messageObjectId: msg.ParentMessageId._id,
-        }: null,
-        messageObjectId: msg._id,
-        anonymousName: msg.senderAnonymousName,
-        reactions: msg.Reactions || [],
-        _links :msg._links|| null,
-      });
-      console.log(this.messages);
-
-      this.$nextTick(this.scrollToBottom);
-    };
-
-    this.socket.on("chat message", this.chatListner);
-    this.socket.on("respond to a message", this.chatListner);
-    this.socket.on("react to message", (msg)=>{
-        const target = this.messages.find(m=> m.messageId === msg.messageId);
-        if(target) target.reactions = msg.Reactions || [];
-    });
-
-    if (this.branchingRoomId && this.senderObjectId) {
-      this.socket.emit("join room", {
-        userId: this.senderObjectId,
-        roomId: this.branchingRoomId
-      });
-    }
-
-
-    this.socket.on("chat status changed", (data) => {
-    if (data.roomType !== "LocalRoom") 
-      return;
-    this.chatPaused = !data.live;
-    this.chatPausedMessage = this.chatPaused ? "Chat is currently paused by admin" : "";});
-    
-    this.socket.on("chat paused", (data) => {
-      this.chatPaused = true;
-      this.chatPausedMessage = data.message;
-    });
-
-  },
-
-  watch: {
-    messages() {
-      this.$nextTick(this.scrollToBottom);
-    },
-    beforeUnmount(){
+ beforeUnmount(){
         if(this.socket && this.chatListner){
             this.socket.off("chat message", this.chatListner);
             this.socket.off("chat-frozen");
@@ -373,6 +294,7 @@ export default {
             
         }
     },
+
     async mounted(){
         await this.getAllBranhingRooms();
 
@@ -424,11 +346,10 @@ export default {
           this.chatPaused = true;
           this.chatPausedMessage = data.message;
         });
-
-        
-
     },
-    watch: {
+    watch: {messages() {
+      this.$nextTick(this.scrollToBottom);
+    },
         branchingRoomId(newId, oldId) {
         if (!newId || !this.socket || !this.senderObjectId) return;
 
@@ -445,56 +366,6 @@ export default {
         this.chatPausedMessage = "";
       },
     },
-    methods:{
-       DisableReplyBanner(){
-        this.replyBannerActive ='';
-    },
-
-    closeAllOptions(){
-        this.closeOptionMenu();
-        this.closeMenu();
-    },
-
-      openOptionMenu(messageId) {
-      this.activeMessageOption = messageId;
-      const msg = this.messages.find(m => m.messageId === messageId);
-      this.messageRelatedLinks = msg?._links || null;
-
-    },
-    closeOptionMenu() {
-      this.activeMessageOption = null;
-      this.showReactionsForMessage = null;
-      this.messageRelatedLinks = null;
-
-    },
-
-    
-
-        changeRoomTopic(newBranchingRoomTopic){
-            this.branchingRoomTopic = String(newBranchingRoomTopic);
-            this.getAllBranhingRooms();
-
-        },
-
-    
-
-    branchingRoomId(newId) {
-      if (!newId || !this.senderObjectId) return;
-
-      this.socket.emit("join room", {
-        userId: this.senderObjectId,
-        roomId: newId
-      });
-
-      this.fetchMessages().then(() => {
-        this.$nextTick(this.scrollToBottom);
-      });
-
-      this.chatPaused = false;
-      this.chatPausedMessage = "";
-    }
-  },
-
   methods: {
     DisableReplyBanner(){
         this.replyBannerActive ='';
@@ -719,7 +590,8 @@ export default {
 
         const msg = this.messages.find(m => m.messageId === messageId);
 
-        followLink(msg._links.reactToMessage, payload);
+        const res = followLink(msg._links.reactToMessage, payload);
+        console.log(res);
 
       if (msg) {
         msg.reactions = res.data.reactions || [];
@@ -771,6 +643,7 @@ export default {
           }
         },
   }
+
 }
 </script>
 
