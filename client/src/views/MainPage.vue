@@ -16,7 +16,7 @@
       <div class="room">
         <!-- LOCAL ROOM -->
         <b-card
-          v-if="user && user.language === 'swe'"
+          v-if="user && user.language === 'sv'"
           class="room-card"
           body-class="d-flex flex-column align-items-center"
           @click="$router.push('/localroom')">

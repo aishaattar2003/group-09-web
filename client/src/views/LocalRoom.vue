@@ -200,6 +200,9 @@
                         <button v-if="isEditing" class="cancelbuttonInside" @click="cancelEdit">
                           <FontAwesomeIcon  icon="fa-solid fa-xmark" size="xl"style="color: #2b0d2b;" />
                         </button>
+                        <button v-if="isEditing" class="cancelbuttonInside" @click="cancelEdit">
+                          <FontAwesomeIcon  icon="fa-solid fa-xmark" size="xl"style="color: #2b0d2b;" />
+                        </button>
                 </form>
             </div>
 
