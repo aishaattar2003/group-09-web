@@ -77,6 +77,7 @@ export default {
       branchingRoomType: "",
       roomTopic: "",
       error: "",
+      parentRoomId:"",
 
       roomTypes: ["LocalRoom", "GlobalRoom"],
 
@@ -102,10 +103,40 @@ export default {
           return;
         }
 
+
+
+        const res = await Api.get("/branchingRooms",{
+         params:{ 
+          branchingRoomType: this.branchingRoomType,
+          roomTopic: this.roomTopic
+        }
+        });
+
+        const checkIfRoomExists = res?.data?.Body[0];
+
+
+        console.log(checkIfRoomExists);
+        if(checkIfRoomExists){
+          alert("Branching Room Already Exists");
+          return;
+        }
+
+          if(this.branchingRoomType === "LocalRoom"){
+            const localParentRooms = await Api.get("/localrooms");
+            const firstLocalRoom = localParentRooms.data[0];
+            this.parentRoomId = firstLocalRoom?._id;
+
+        } else if(this.branchingRoomType === "GlobalRoom"){
+            const globalParentRooms = await Api.get("/localrooms");
+            const firstGlobalRoom = globalParentRooms.data[0];
+            this.parentRoomId = firstGlobalRoom?._id;
+
+        }
         await Api.post("/branchingRooms", {
           branchingRoomId: this.branchingRoomId,
           branchingRoomType: this.branchingRoomType,
-          roomTopic: this.roomTopic
+          roomTopic: this.roomTopic,
+          parentRoomId: this.parentRoomId
         });
 
         alert("Branching room created successfully!");
