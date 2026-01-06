@@ -1,12 +1,15 @@
 <template>
     <div class="login-wrapper">
-      <div class="login-card">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-12 col-sm-10 col-md-8 col-lg-5">
+            <div class="login-card">
   
         <h2 class="title">Update Password</h2>
   
         <!-- Verify user -->
-        <form @submit.prevent="verifyUser" class="form" v-if="!verified">
-          
+        <form @submit.prevent="verifyUser" class="form login-form-grid" v-if="!verified">
+        <div class="inputs-row">
           <div class="input-group">
             <label>UserID</label>
             <input v-model="userId" type="text" required />
@@ -16,6 +19,7 @@
             <label>Personal Number</label>
             <input v-model="personalNumber" type="text" maxlength="10" required />
           </div>
+        </div> 
   
           <p v-if="error" class="error">{{ error }}</p>
   
@@ -23,10 +27,13 @@
         </form>
   
         <!-- Enter new password -->
-        <form @submit.prevent="updatePassword" class="form" v-else>
+        <form @submit.prevent="updatePassword" class="form login-form-grid" v-else>
+
+          <div class="inputs-row">
           <div class="input-group">
             <label>New Password</label>
             <input v-model="newPassword" type="password" maxlength="8" required />
+          </div>
           </div>
   
           <p v-if="error" class="error">{{ error }}</p>
@@ -37,6 +44,9 @@
   
       </div>
     </div>
+  </div>
+  </div>
+</div>
   </template>
   
   <script>
@@ -101,79 +111,6 @@
   };
   </script>
   
-  <style>
 
-  .login-wrapper {
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(90deg, #2b0d2b, #6d2a46);
-  }
-  
-  .login-card {
-    width: 480px;
-    padding: 55px 50px;
-    border-radius: 45px;
-    background: linear-gradient(90deg, rgba(255, 194, 194, 0.18), #936480);
-    backdrop-filter: blur(12px);
-    text-align: center;
-    color: white;
-  }
-  
-  .title {
-    font-family: "Noto Serif Ethiopic", serif;
-    font-size: 42px;
-    font-weight: 700;
-    margin-bottom: 50px;
-  }
-  
-  .form {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-  }
-  
-  .input-group label {
-    font-size: 16px;
-    margin-bottom: 8px;
-    color: #f8e7f2;
-  }
-  
-  .input-group input {
-    width: 100%;
-    height: 50px;
-    border-radius: 100px !important;
-    padding: 0 20px;
-    border: none;
-    background: linear-gradient(90deg, #2b0d2b, #6d2a46);
-    color: white;
-  }
-  
-  .login-btn {
-    width: 70%;
-    margin: 25px auto 0 auto;
-    padding: 15px 0;
-    border-radius: 50px;
-    background: #f8f6f7;
-    color: #3a0f2a;
-    font-size: 20px;
-    font-weight: 700;
-    cursor: pointer;
-  }
-  
-  .login-btn:hover {
-    background: linear-gradient(90deg, rgba(255, 194, 194, 0.32), #a77b99);
-  }
-  
-  .error {
-    color: #ffb4b4;
-    font-size: 16px;
-  }
-  
-  .success {
-    color: #bbf7ce;
-    font-size: 16px;
-  }
-  </style>
+  <style src="@/styles/PasswordPage.css"></style>
   
