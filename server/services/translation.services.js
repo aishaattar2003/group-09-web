@@ -4,6 +4,8 @@ const translationCache = {};
 
 const langMap = {
   eng: "en", // works
+  ara: "ar", // works
+  urd: "ur", // works
   fra: "fr", // works
   swe: "sv", // works
   spa: "es", // works
