@@ -2,32 +2,27 @@ const axios = require("axios");
 
 const translationCache = {};
 
-const langMap = {
-  eng: "en", // works
-  ara: "ar", // works
-  urd: "ur", // works
-  fra: "fr", // works
-  swe: "sv", // works
-  spa: "es", // works
-  deu: "de", // works
-  ita: "it", // works
-  rus: "ru", // works
-  cmn: "zh", // works
-  jpn: "ja", // works
-  kor: "ko", // works
-  hin: "hi", // works
-  som: "so"  // works
-};
-
-let francFn;
-
-async function detectLanguage(text) {
-  if (!francFn) {
-    const mod = await import("franc");
-    francFn = mod.franc;
+async function translateText({ messageId, text, target }) {
+  if (!messageId || !text || !target) {
+    throw new Error("Missing messageId, text, or target language");
   }
-  return francFn(text);
-}
+
+  if (!translationCache[messageId]) {
+    translationCache[messageId] = {};
+  }
+
+  if (translationCache[messageId][target]) {
+    return {
+      translated: translationCache[messageId][target],
+      cached: true,
+      failed: false
+    };
+  }
+
+  try {
+    const axios = require("axios");
+
+const translationCache = {};
 
 async function translateText({ messageId, text, target }) {
   if (!messageId || !text || !target) {
@@ -46,24 +41,24 @@ async function translateText({ messageId, text, target }) {
     };
   }
 
-  const detectedLang = await detectLanguage(text);
-  const source = langMap[detectedLang] || "en";
-
   try {
-    const apiRes = await axios.get(
-      "https://api.mymemory.translated.net/get",
+    const apiKey = process.env.GOOGLE_TRANSLATE_API_KEY;
+
+    const res = await axios.post(
+      "https://translation.googleapis.com/language/translate/v2",
       {
-        params: {
-          q: text,
-          langpair: `${source}|${target}`
-        }
+        q: text,
+        target
+      },
+      {
+        params: { key: apiKey }
       }
     );
 
     const translated =
-      apiRes.data?.responseData?.translatedText || null;
+      res.data?.data?.translations?.[0]?.translatedText;
 
-    if (!translated || translated.trim() === "") {
+    if (!translated) {
       return {
         translated: text,
         cached: false,
@@ -80,7 +75,58 @@ async function translateText({ messageId, text, target }) {
     };
 
   } catch (err) {
-    console.error("Translation error:", err.message);
+    console.error(
+      "Google Translate error:",
+      err.response?.data || err.message
+    );
+
+    return {
+      translated: text,
+      cached: false,
+      failed: true
+    };
+  }
+}
+
+module.exports = { translateText };
+
+
+    const res = await axios.post(
+      "https://translation.googleapis.com/language/translate/v2",
+      {
+        q: text,
+        target
+      },
+      {
+        params: { key: apiKey }
+      }
+    );
+
+    const translated =
+      res.data?.data?.translations?.[0]?.translatedText;
+
+    if (!translated) {
+      return {
+        translated: text,
+        cached: false,
+        failed: true
+      };
+    }
+
+    translationCache[messageId][target] = translated;
+
+    return {
+      translated,
+      cached: false,
+      failed: false
+    };
+
+  } catch (err) {
+    console.error(
+      "Google Translate error:",
+      err.response?.data || err.message
+    );
+
     return {
       translated: text,
       cached: false,
