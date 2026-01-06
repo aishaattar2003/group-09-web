@@ -14,7 +14,16 @@
 
         <!-- Localroom title and branching room type -->
             <div class="header-flex-box d-flex">
+              <div class="room-tittle">
                 <h1 class="header-title-style">GLOBAL ROOM</h1>
+                <img
+                    class="global-icon"
+                    src="@/assets/Global_logo.png"
+                    alt="Global Room"
+                    />
+
+                  </div>
+                
 
                 <div class="category-div-style d-flex column">
                     <h2 class="category-title-style">
@@ -477,6 +486,7 @@ export default {
         }
       });
 
+
       const room = res.data.Body?.[0];
       this.branchingRoomId = room ? room.branchingRoomId : '';
       console.log(this.branchingRoomId);
@@ -699,6 +709,14 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+}
+.room-tittle{
+      display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+
 }
 
 .header-title-style {
@@ -718,6 +736,13 @@ export default {
     justify-content: center;
     width: clamp(200px, 20vw, 330px);
     max-width: 70%;
+}
+
+
+.global-icon {
+    width: 35px;  
+    height: 40px;
+    object-fit: contain;
 }
 
 .category-title-style {
