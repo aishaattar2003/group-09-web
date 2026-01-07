@@ -102,7 +102,7 @@ HearMeOut is a web based anonymous confession and support platform for users age
 
 ## Advanced Feature:
 
-### Real-Time Message Translation (Using LibreTranslate)
+### Real-Time Message Translation (Using Google Cload Translate)
 
 In the basic version of HearMeOut, users can send messages using the sockets. Each of these messages would be in their own original language.
 
@@ -130,7 +130,7 @@ The Translated version will be stored in a cache for each message with a unique 
 `${messageId}:${targetLang}` format.
 
 This will help reduce the API call to translate the same message, while we keep the original text for data integrity.  
-The backend will translate that single message using our translation API (LibreTranslate).
+The backend will translate that single message using our translation API (Google Cloud Translate).
 
 ---
 
@@ -140,7 +140,7 @@ The backend will translate that single message using our translation API (LibreT
 2. **Cache Lookup** → Backend checks if the message has already been translated to prevent access API calls.
 3. **If cached if not found, then:**
    - **Fetch Original Message** → Fetches the original Message Collection using the messageId.
-   - **Translation Request** → Send the message body to the LibraTranslate API.
+   - **Translation Request** → Send the message body to the (Google Cloud Translate) API.
    - **Send Translated Message** → Send the translated version to the frontend.
    - **Store in Cache** → Store the cache to a map in TranslationCache.js with a TTL (e.g 20 minutes).
 
