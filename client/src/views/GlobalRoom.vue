@@ -551,21 +551,23 @@ export default {
         if (this.isEditing && this.selectedMessageId) {
           try {
             const msg = this.messages.find(m=> m.messageId === this.selectedMessageId);
-            await followLink(msg._links.updateMessage, {Body:this.message});
+            await followLink(msg._links.updateMessage, {
+            Body: this.message
+          });
+        
+          msg.Body = this.message;
+          this.isEditing = false;
+          this.selectedMessageId = null;
+          this.message = '';
+          this.replyBannerActive = '';
+          this.parentMessageContent = '';
+          return;
 
-            this.isEditing = false;
-            this.selectedMessageId = null;
-            this.message = '';
-            this.replyBannerActive = '';
-            this.parentMessageContent = '';
-            
-            await this.fetchMessages();
-            return;
-          } catch (err) {
-            console.error("Failed to edit message:", err);
-            return;
-          }
+        } catch (err) {
+          console.error("Failed to edit message:", err);
+          return;
         }
+      }
       const messageId = this.parentMessageId
         ? `responceMessageId${Math.floor(Math.random() * 100000)}`
         : `messageId${Math.floor(Math.random() * 100000)}`;
@@ -624,7 +626,7 @@ export default {
 
         const msg = this.messages.find(m => m.messageId === messageId);
 
-        const res = followLink(msg._links.reactToMessage, payload);
+        const res = await followLink(msg._links.reactToMessage, payload);
 
       if (msg) {
         msg.reactions = res?.data?.reactions || [];
