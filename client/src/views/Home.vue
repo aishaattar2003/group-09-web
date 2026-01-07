@@ -1,4 +1,5 @@
 <template>
+  <!-- Navbar -->
   <nav class="soft-navbar">
     <div class="nav-left">
       <a class="nav-item" @click="$router.push('/')">Home</a>
