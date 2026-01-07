@@ -59,10 +59,12 @@
     </div>
 
     <!-- Popup -->
-    <div v-if="showPopup" class="popup">
+    <div v-if="showPopup" class="popup-overlay">
+      <div class="popup">
       <p>All messages were successfully deleted.</p>
       <button @click="showPopup = false">Continue</button>
     </div>
+  </div>
   </div>
 </template>
 
