@@ -349,7 +349,12 @@ export default {
         this.$nextTick(()=>{
             this.scrollToBottom();
         });
-        this.socket.on("chat message",this.chatListner);
+        this.socket.on("chat message", this.chatListner);
+        this.socket.on("respond to a message", this.chatListner);
+        this.socket.on("react to message", (msg)=>{
+        const target = this.messages.find(m=> m.messageId === msg.messageId);
+        if(target) target.reactions = msg.Reactions || [];
+        });
 
          this.$nextTick(() => {
             this.scrollToBottom();
